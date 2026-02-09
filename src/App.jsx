@@ -13,6 +13,7 @@ import Whitepaper from './components/Whitepaper';
 import CapturePage from './components/CapturePage';
 import DebugInfo from './components/DebugInfo';
 import PokerPage from './components/poker/PokerPage';
+import { canAccessPoker, isPokerAdmin, isPokerPublic, setPokerPublic } from './config/pokerAccess';
 import './components/poker/poker.css';
 import './index.css';
 
@@ -20,6 +21,7 @@ function App() {
   const [showWhitepaper, setShowWhitepaper] = useState(false);
   const [showCapturePage, setShowCapturePage] = useState(false);
   const [showPoker, setShowPoker] = useState(false);
+  const [pokerPublic, setPokerPublicState] = useState(isPokerPublic());
   const [referrerFromUrl, setReferrerFromUrl] = useState(null);
   const autoConnectAttempted = useRef(false);
   const {
@@ -81,8 +83,17 @@ function App() {
     }
   }, [isConnected, isConnecting, connect]);
 
-  // Poker fullscreen mode
-  if (showPoker) {
+  const hasPokerAccess = canAccessPoker(account);
+  const isAdmin = isPokerAdmin(account);
+
+  const handleTogglePokerPublic = () => {
+    const next = !pokerPublic;
+    setPokerPublic(next);
+    setPokerPublicState(next);
+  };
+
+  // Poker fullscreen mode — so entra se tem acesso
+  if (showPoker && hasPokerAccess) {
     return (
       <div className="min-h-screen">
         <WalletConnect
@@ -127,7 +138,6 @@ function App() {
             connect={connect}
             isConnecting={isConnecting}
             onOpenWhitepaper={() => setShowWhitepaper(true)}
-            onOpenPoker={() => setShowPoker(true)}
           />
         )}
 
@@ -155,26 +165,47 @@ function App() {
               isCorrectNetwork={isCorrectNetwork}
             />
 
-            {/* Poker Access Card */}
-            <div className="card bg-gradient-to-r from-emerald-900 to-teal-900 border-emerald-700 cursor-pointer hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300" onClick={() => setShowPoker(true)}>
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="text-4xl sm:text-5xl" style={{ lineHeight: 1 }}>♠</div>
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-bold text-white mb-1">ZOD Poker</h3>
-                    <p className="text-sm text-emerald-300 opacity-80">
-                      Poker multiplayer on-chain. Jogue Texas Hold'em com chips tokenizados na BSC.
-                    </p>
+            {/* Poker — so aparece para enderecos autorizados */}
+            {hasPokerAccess && (
+              <div className="card bg-gradient-to-r from-emerald-900 to-teal-900 border-emerald-700 cursor-pointer hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300" onClick={() => setShowPoker(true)}>
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="text-4xl sm:text-5xl" style={{ lineHeight: 1 }}>&#9824;</div>
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-1">ZOD Poker</h3>
+                      <p className="text-sm text-emerald-300 opacity-80">
+                        Poker multiplayer on-chain. Jogue Texas Hold'em com chips tokenizados na BSC.
+                      </p>
+                    </div>
                   </div>
+                  <button
+                    className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2.5 px-6 rounded-xl transition-colors text-sm shadow-lg shadow-emerald-500/30"
+                    onClick={(e) => { e.stopPropagation(); setShowPoker(true); }}
+                  >
+                    Jogar Agora &#8594;
+                  </button>
                 </div>
-                <button
-                  className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2.5 px-6 rounded-xl transition-colors text-sm shadow-lg shadow-emerald-500/30"
-                  onClick={(e) => { e.stopPropagation(); setShowPoker(true); }}
-                >
-                  Jogar Agora &#8594;
-                </button>
+
+                {/* Admin: toggle acesso publico */}
+                {isAdmin && (
+                  <div className="mt-3 pt-3 border-t border-emerald-700 flex items-center justify-between">
+                    <span className="text-xs text-emerald-400">
+                      Acesso publico: <strong>{pokerPublic ? 'ATIVO' : 'RESTRITO'}</strong>
+                    </span>
+                    <button
+                      className={`text-xs font-bold px-4 py-1.5 rounded-lg transition-colors ${
+                        pokerPublic
+                          ? 'bg-red-600 hover:bg-red-500 text-white'
+                          : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                      }`}
+                      onClick={(e) => { e.stopPropagation(); handleTogglePokerPublic(); }}
+                    >
+                      {pokerPublic ? 'Desativar acesso publico' : 'Liberar para todos'}
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
 
             {/* Row 1: Pool Swap */}
             <PoolSwap
