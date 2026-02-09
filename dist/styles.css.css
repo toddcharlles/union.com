@@ -1,0 +1,198 @@
+
+/* ===== ZodPoker — Theme Space Neon/Casino (scoped) ===== */
+body.theme-space{
+  --bg-0:#0b0b18;
+  --bg-1:#0f0f24;
+  --bg-2:#151538;
+  --card:#15152aCC;
+  --accent:#7c5cff;
+  --accent-2:#00e5ff;
+  --accent-3:#ff3ca6;
+  --good:#7dfc9a;
+  --warn:#ffd166;
+  --bad:#ff6b6b;
+  --text-0:#ffffff;
+  --text-1:#d0d6ff;
+  --muted:#9aa3c7;
+  --shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 40px rgba(124,92,255,.12);
+
+  --sidebar-w: 84px;
+  --sidebar-w-expanded: 220px;
+  --dock-h: 74px;
+
+  --casino-midnight:#0a0b12;
+  --casino-ink:#0f1220;
+  --casino-royal:#4b3cff;
+  --casino-electric:#00d1ff;
+  --casino-gold:#ffd166;
+  --casino-gold-strong:#ffc83d;
+  --casino-emerald:#1dd1a1;
+  --casino-emerald-deep:#0fb98b;
+  --casino-ruby:#ff3d5a;
+  --casino-ruby-deep:#e21e41;
+  --casino-purple:#7c5cff;
+  --casino-shadow:0 12px 28px rgba(0,0,0,.45), 0 0 34px rgba(124,92,255,.14);
+
+  --cta-primary: var(--casino-gold);
+  --cta-primary-2:#ff9f1a;
+  --cta-sec: var(--casino-emerald);
+  --cta-warn: var(--casino-ruby);
+}
+
+/* Base do tema */
+body.theme-space{
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgba(255,209,102,.10), transparent 60%),
+    radial-gradient(900px 500px at 100% 20%, rgba(0,209,255,.10), transparent 60%),
+    linear-gradient(180deg, var(--casino-midnight), var(--bg-1) 50%, var(--bg-2));
+  color:var(--text-1);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  letter-spacing:.2px;
+}
+body.theme-space #stars-bg{position:fixed; inset:0; z-index:-1; pointer-events:none}
+body.theme-space h1, body.theme-space h2, body.theme-space h3, body.theme-space h4{
+  color:var(--text-0); text-shadow: 0 0 10px rgba(124,92,255,.25)
+}
+
+/* Cards */
+body.theme-space .glow{
+  background: linear-gradient(180deg, rgba(21,21,42,.95), rgba(13,19,40,.92));
+  border:1px solid rgba(255,255,255,.08);
+  border-image: linear-gradient(90deg, rgba(255,209,102,.35), rgba(124,92,255,.25), rgba(0,209,255,.28)) 1;
+  border-radius:16px; box-shadow: var(--casino-shadow); backdrop-filter: blur(10px);
+}
+
+/* Botões */
+body.theme-space .button,
+body.theme-space .btn,
+body.theme-space button{
+  background: linear-gradient(90deg, var(--cta-primary), var(--cta-primary-2));
+  color:#0a0a12 !important;
+  border: none; padding:.75rem 1rem; border-radius:12px; font-weight:700; letter-spacing:.3px;
+  transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
+  box-shadow: 0 8px 22px rgba(255,209,102,.25), 0 0 18px rgba(255,209,102,.18);
+}
+body.theme-space .button:hover,
+body.theme-space .btn:hover,
+body.theme-space button:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+body.theme-space .btn-gold   { background: linear-gradient(90deg, var(--casino-gold), var(--cta-primary-2)); color:#0b0b12!important; box-shadow: 0 10px 26px rgba(255,209,102,.32); }
+body.theme-space .btn-emerald{ background: linear-gradient(90deg, var(--casino-emerald), var(--casino-emerald-deep)); color:#06110e!important; box-shadow: 0 10px 26px rgba(29,209,161,.28); }
+body.theme-space .btn-ruby   { background: linear-gradient(90deg, var(--casino-ruby), var(--casino-ruby-deep)); color:#19060a!important; box-shadow: 0 10px 26px rgba(226,30,65,.28); }
+body.theme-space .btn-royal  { background: linear-gradient(90deg, var(--casino-royal), var(--casino-electric)); color:#0b0b12!important; box-shadow: 0 10px 26px rgba(75,60,255,.28); }
+
+/* Inputs */
+body.theme-space input,
+body.theme-space select{
+  background: rgba(15,15,40,.8);
+  border:1px solid rgba(124,92,255,.25);
+  color: var(--text-1);
+  border-radius: 10px;
+  padding:.6rem .7rem;
+  outline:none;
+}
+
+/* Tabelas */
+body.theme-space .table-wrapper{ overflow:auto; border-radius:12px; border:1px solid rgba(255,255,255,.08) }
+body.theme-space table{ width:100%; border-collapse: collapse }
+body.theme-space thead th{
+  background: linear-gradient(180deg, rgba(75,60,255,.22), rgba(0,209,255,.10));
+  color: var(--text-0); font-weight: 700; text-align:left; padding:.75rem .9rem;
+}
+body.theme-space tbody td{ padding:.7rem .9rem; border-top:1px solid rgba(255,255,255,.06) }
+body.theme-space tbody tr:hover{ background: rgba(255,255,255,.03) }
+
+/* Pills */
+body.theme-space .badge,
+body.theme-space .pill{
+  background: linear-gradient(90deg, rgba(255,209,102,.28), rgba(29,209,161,.24));
+  border:1px solid rgba(255,255,255,.26);
+  color: var(--text-1);
+  border-radius: 999px;
+  padding: .35rem .7rem;
+  box-shadow:
+    0 0 30px rgba(255,209,102,.28),
+    0 0 16px rgba(29,209,161,.22),
+    0 0 0 2px rgba(255,255,255,.06) inset;
+  backdrop-filter: blur(6px) saturate(140%);
+}
+
+/* Price chip */
+body.theme-space .price-chip{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.42rem .66rem; border-radius:999px;
+  background:
+    radial-gradient(120% 160% at 10% 0%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(90deg, rgba(29,209,161,.28), rgba(255,209,102,.30));
+  border:1px solid rgba(255,255,255,.22);
+  color: var(--text-0); font-weight:700; letter-spacing:.2px;
+  box-shadow: 0 0 30px rgba(29,209,161,.30), 0 0 16px rgba(255,209,102,.28), 0 0 0 2px rgba(255,255,255,.06) inset;
+  backdrop-filter: blur(8px) saturate(140%);
+  white-space: nowrap;
+}
+body.theme-space .price-chip .ticker{
+  font-size:.78rem; font-weight:800; padding:.18rem .42rem; border-radius:8px;
+  background: linear-gradient(90deg, rgba(255,209,102,.30), rgba(29,209,161,.18));
+  border:1px solid rgba(255,209,102,.55); color:#fff3cc;
+}
+
+/* Jackpot */
+@keyframes heartbeat-fast{
+  0%{ transform: scale(1);    filter: brightness(1);}
+  12%{ transform: scale(1.10);filter: brightness(1.12);}
+  24%{ transform: scale(1.00);filter: brightness(1.00);}
+  38%{ transform: scale(1.13);filter: brightness(1.16);}
+  55%{ transform: scale(1.02);filter: brightness(1.04);}
+  100%{transform: scale(1);    filter: brightness(1);}
+}
+@keyframes heartbeat-glow{
+  0%,100%{
+    text-shadow: 0 0 16px rgba(255,209,102,.45), 0 0 42px rgba(124,92,255,.35);
+    box-shadow: 0 12px 32px rgba(0,0,0,.35), 0 0 30px rgba(124,92,255,.24) inset;
+  }
+  12%,38%{
+    text-shadow: 0 0 24px rgba(255,209,102,.65), 0 0 60px rgba(124,92,255,.55);
+    box-shadow: 0 16px 40px rgba(0,0,0,.45), 0 0 50px rgba(124,92,255,.36) inset;
+  }
+}
+body.theme-space .jackpot-wrap{ display:flex; flex-direction:column; align-items:center; gap:1rem; text-align:center; }
+body.theme-space .jackpot-icon{ font-size: 3rem; color: var(--casino-gold); text-shadow: 0 0 18px rgba(255,209,102,.35); }
+body.theme-space .jackpot-xxl{
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 1.05; font-weight: 900; letter-spacing: .6px;
+  color: var(--casino-gold);
+  text-shadow: 0 0 18px rgba(255,209,102,.55), 0 0 60px rgba(226,30,65,.35);
+  padding: .25rem .9rem; border-radius: 14px;
+  background: radial-gradient(100% 120% at 50% 0%, rgba(255,215,0,.12), transparent 60%);
+  border: 1px solid rgba(255,215,0,.3);
+  box-shadow: 0 12px 32px rgba(0,0,0,.35), 0 0 30px rgba(124,92,255,.24) inset;
+  display:inline-block; will-change: transform, filter, box-shadow;
+  animation: heartbeat-fast 1.15s cubic-bezier(.17,.67,.4,1.25) infinite, heartbeat-glow 1.15s ease-in-out infinite !important;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: reduce){
+  body.theme-space .jackpot-xxl{ animation:none !important; }
+}
+
+/* Result / grids */
+body.theme-space .result-card{
+  background: linear-gradient(180deg, rgba(21,21,42,.85), rgba(21,21,58,.65));
+  border:1px solid rgba(124,92,255,.22);
+  border-radius:16px; padding:16px; box-shadow: var(--shadow);
+}
+body.theme-space .result-star{
+  display:inline-flex; align-items:center; gap:6px; padding:.2rem .5rem; border-radius:999px;
+  background: linear-gradient(90deg, rgba(255,209,102,.22), rgba(29,209,161,.14));
+  border:1px solid rgba(255,215,0,.35); color:var(--casino-gold);
+}
+body.theme-space .progress{
+  height:10px; border-radius:999px;
+  background: linear-gradient(90deg, var(--casino-ruby), var(--casino-gold), var(--casino-emerald));
+  box-shadow: 0 6px 24px rgba(0,0,0,.38), 0 0 22px rgba(255,209,102,.22);
+}
+
+/* Utilidades */
+body.theme-space .text-win{ color: var(--casino-emerald); }
+body.theme-space .text-lose{ color: var(--casino-ruby); }
+body.theme-space .text-royal{ color: var(--casino-royal); }
+body.theme-space .bg-win{ background: linear-gradient(90deg, rgba(29,209,161,.18), rgba(29,209,161,.10)); }
+body.theme-space .bg-lose{ background: linear-gradient(90deg, rgba(226,30,65,.18), rgba(226,30,65,.08)); }
