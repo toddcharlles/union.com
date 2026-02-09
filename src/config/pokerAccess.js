@@ -55,8 +55,8 @@ export function isOnChainMode() {
   return getItem('mode', 'offchain') === 'onchain';
 }
 
-// --- URL do servidor de poker ---
-const DEFAULT_SERVER = import.meta.env.VITE_POKER_SERVER || 'https://unionzod.com/poker-socket';
+// --- URL do servidor de poker (base URL, sem path do socket.io) ---
+const DEFAULT_SERVER = import.meta.env.VITE_POKER_SERVER || 'https://unionzod.com';
 
 export function getPokerServerUrl() {
   return getItem('server_url', '') || DEFAULT_SERVER;

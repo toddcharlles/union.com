@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io } from 'socket.io-client';
-
-const POKER_SERVER = import.meta.env.VITE_POKER_SERVER || 'https://unionzod.com/poker-socket';
+import { getPokerServerUrl } from '../config/pokerAccess';
 
 export function usePokerSocket(account) {
   const socketRef = useRef(null);
@@ -21,7 +20,10 @@ export function usePokerSocket(account) {
   const connect = useCallback(() => {
     if (socketRef.current?.connected) return;
 
-    const socket = io(POKER_SERVER, {
+    const serverUrl = getPokerServerUrl();
+
+    const socket = io(serverUrl, {
+      path: '/poker-socket/socket.io/',
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionDelay: 1000,
