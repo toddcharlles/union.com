@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect }) => {
+const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode }) => {
   const [playerName, setPlayerName] = useState(() => localStorage.getItem('poker_name') || '');
   const [buyin, setBuyin] = useState(10000);
   const [selectedTable, setSelectedTable] = useState(null);
@@ -23,7 +23,7 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect }) =>
           <span className="poker-icon">♠</span>
           <div>
             <h2>ZOD Poker</h2>
-            <p>Poker multiplayer on-chain na BNB Smart Chain</p>
+            <p>Poker multiplayer {mode === 'onchain' ? 'on-chain na BNB Smart Chain' : 'off-chain — modo servidor'}</p>
           </div>
         </div>
         <div className="poker-lobby-status">

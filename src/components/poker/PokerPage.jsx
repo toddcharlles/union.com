@@ -1,10 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { usePokerSocket } from '../../hooks/usePokerSocket';
+import { isPokerAdmin, getPokerMode } from '../../config/pokerAccess';
 import PokerLobby from './PokerLobby';
 import PokerGame from './PokerGame';
+import PokerAdmin from './PokerAdmin';
 
 const PokerPage = ({ account, onBack }) => {
   const [currentTableId, setCurrentTableId] = useState(null);
+  const [showAdmin, setShowAdmin] = useState(false);
+
+  const isAdmin = isPokerAdmin(account);
+  const mode = getPokerMode();
 
   const {
     connected,
@@ -69,11 +75,29 @@ const PokerPage = ({ account, onBack }) => {
 
   return (
     <div className="poker-page">
-      {/* Back button */}
+      {/* Top navigation */}
       <div className="poker-page-nav">
         <button className="poker-btn poker-btn-ghost" onClick={handleBack}>
           &#8592; Voltar ao DApp
         </button>
+
+        <div className="poker-page-nav-right">
+          {/* Mode badge */}
+          <span className={`poker-mode-badge ${mode}`}>
+            {mode === 'onchain' ? '&#9939; On-Chain' : '&#9889; Off-Chain'}
+          </span>
+
+          {/* Admin button */}
+          {isAdmin && (
+            <button
+              className="poker-btn poker-btn-ghost poker-btn-sm"
+              onClick={() => setShowAdmin(true)}
+              title="Painel Admin"
+            >
+              &#9881; Admin
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Error banner */}
@@ -81,6 +105,11 @@ const PokerPage = ({ account, onBack }) => {
         <div className="poker-error-banner">
           <span>{error}</span>
         </div>
+      )}
+
+      {/* Admin Panel Modal */}
+      {showAdmin && (
+        <PokerAdmin onClose={() => setShowAdmin(false)} />
       )}
 
       {/* Lobby or Game */}
@@ -91,6 +120,7 @@ const PokerPage = ({ account, onBack }) => {
           onRefresh={refreshTables}
           connected={connected}
           onConnect={connect}
+          mode={mode}
         />
       ) : (
         <PokerGame
