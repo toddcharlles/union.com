@@ -911,7 +911,7 @@ html, body {
 }
 .timer-track {
   fill: none;
-  stroke: rgba(255,255,255,0.08);
+  stroke: rgba(255,255,255,0.15);
   stroke-width: 3;
 }
 .timer-fill {
@@ -922,8 +922,19 @@ html, body {
   stroke-dasharray: 182;
   stroke-dashoffset: 0;
   animation: timerCountdown 30s linear forwards;
-  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.5));
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.7));
 }
+
+/* More prominent timer for player's own seat */
+.timer-ring-me .timer-track {
+  stroke: rgba(255,255,255,0.25);
+  stroke-width: 4;
+}
+.timer-ring-me .timer-fill {
+  stroke-width: 4;
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 1));
+}
+
 @keyframes timerCountdown {
   from { stroke-dashoffset: 0; stroke: var(--gold); }
   70% { stroke: var(--gold); }

@@ -78,7 +78,7 @@ const PokerSeat = ({ player, index, totalSeats, isActive, isDealer, isMe, holeCa
       <div className="seat-box">
         {/* Timer ring for active player */}
         {isActive && (
-          <div className="seat-timer-ring">
+          <div className={`seat-timer-ring ${isMe ? 'timer-ring-me' : ''}`} key={`timer-${index}-${isActive}`}>
             <svg viewBox="0 0 64 64">
               <circle cx="32" cy="32" r="29" className="timer-track" />
               <circle cx="32" cy="32" r="29" className="timer-fill" />
