@@ -701,18 +701,7 @@
   z-index: 10;
 }
 
-/* 6-seat layout positions (optimized for oval table) */
-.poker-seat-0 { bottom: -2.5rem; left: 50%; transform: translateX(-50%); }
-.poker-seat-1 { bottom: 8%; left: 3%; }
-.poker-seat-2 { top: 8%; left: 3%; }
-.poker-seat-3 { top: -2.5rem; left: 50%; transform: translateX(-50%); }
-.poker-seat-4 { top: 8%; right: 3%; }
-.poker-seat-5 { bottom: 8%; right: 3%; }
-
-/* Extra seats for 9-seat tables */
-.poker-seat-6 { bottom: 42%; left: -2%; }
-.poker-seat-7 { top: 42%; right: -2%; }
-.poker-seat-8 { top: -2.5rem; left: 30%; }
+/* Seat positions are now calculated dynamically via inline styles */
 
 /* ---- Seat Box (avatar + info) ---- */
 .seat-box {
@@ -941,16 +930,12 @@
   pointer-events: none;
 }
 
-/* Position bets toward the center based on seat position */
-.poker-seat-0 .seat-bet { top: -2rem; left: 50%; transform: translateX(-50%); }
-.poker-seat-1 .seat-bet { top: 20%; right: -3rem; }
-.poker-seat-2 .seat-bet { bottom: 20%; right: -3rem; }
-.poker-seat-3 .seat-bet { bottom: -2rem; left: 50%; transform: translateX(-50%); }
-.poker-seat-4 .seat-bet { bottom: 20%; left: -3rem; }
-.poker-seat-5 .seat-bet { top: 20%; left: -3rem; }
-.poker-seat-6 .seat-bet { top: 30%; right: -3rem; }
-.poker-seat-7 .seat-bet { top: 30%; left: -3rem; }
-.poker-seat-8 .seat-bet { bottom: -2rem; left: 50%; transform: translateX(-50%); }
+/* Bet positioned above the seat */
+.seat-bet {
+  left: 50%;
+  transform: translateX(-50%);
+  top: -1.5rem;
+}
 
 .bet-chips {
   display: flex;
@@ -1858,7 +1843,7 @@
 
   .poker-rail { padding: 0.4rem; }
 
-  .poker-seats-container { inset: -2rem; }
+  .poker-seats-container { inset: -1.5rem; }
 
   .seat-avatar { width: 2.25rem; height: 2.25rem; }
   .seat-avatar-letter { font-size: 0.85rem; }

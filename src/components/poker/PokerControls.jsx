@@ -44,7 +44,7 @@ const PokerControls = ({ actionRequest, onAction }) => {
           className="ctrl-btn ctrl-fold"
           onClick={() => handleAction('fold')}
         >
-          <span className="ctrl-icon">✕</span>
+          <span className="ctrl-icon">X</span>
           <span className="ctrl-label">Fold</span>
         </button>
 
@@ -52,7 +52,7 @@ const PokerControls = ({ actionRequest, onAction }) => {
           className="ctrl-btn ctrl-check"
           onClick={() => handleAction(isCall ? 'call' : 'check')}
         >
-          <span className="ctrl-icon">{isCall ? '📞' : '✓'}</span>
+          <span className="ctrl-icon">{isCall ? '$' : 'OK'}</span>
           <span className="ctrl-label">{isCall ? `Call` : 'Check'}</span>
           {isCall && <span className="ctrl-amount">${fmt(toCall)}</span>}
         </button>
@@ -62,7 +62,7 @@ const PokerControls = ({ actionRequest, onAction }) => {
             className="ctrl-btn ctrl-raise"
             onClick={() => handleAction('raise')}
           >
-            <span className="ctrl-icon">↑</span>
+            <span className="ctrl-icon">+</span>
             <span className="ctrl-label">Raise</span>
             <span className="ctrl-amount">${fmt(raiseAmount)}</span>
           </button>
@@ -73,7 +73,7 @@ const PokerControls = ({ actionRequest, onAction }) => {
             className="ctrl-btn ctrl-allin"
             onClick={() => handleAction('all-in')}
           >
-            <span className="ctrl-icon">🔥</span>
+            <span className="ctrl-icon">!</span>
             <span className="ctrl-label">ALL-IN</span>
           </button>
         )}

@@ -11,14 +11,23 @@ const AVATAR_COLORS = [
   ['#06b6d4', '#0891b2'], // cyan
   ['#f97316', '#ea580c'], // orange
   ['#14b8a6', '#0d9488'], // teal
+  ['#84cc16', '#65a30d'], // lime
 ];
 
-const PokerSeat = ({ player, index, totalSeats, isActive, isDealer, isMe, holeCards, revealedCards, isWinner, winnerHand, currentBet }) => {
+const PokerSeat = ({ player, index, totalSeats, isActive, isDealer, isMe, holeCards, revealedCards, isWinner, winnerHand, currentBet, seatStyle }) => {
   const colors = AVATAR_COLORS[index % AVATAR_COLORS.length];
+
+  // Dynamic positioning via inline style from parent
+  const posStyle = seatStyle ? {
+    position: 'absolute',
+    left: seatStyle.left,
+    top: seatStyle.top,
+    transform: 'translate(-50%, -50%)',
+  } : {};
 
   if (!player) {
     return (
-      <div className={`poker-seat poker-seat-${index} poker-seat-empty`}>
+      <div className="poker-seat poker-seat-empty" style={posStyle}>
         <div className="seat-box">
           <div className="seat-avatar seat-avatar-empty">
             <span className="seat-empty-icon">+</span>
@@ -44,7 +53,6 @@ const PokerSeat = ({ player, index, totalSeats, isActive, isDealer, isMe, holeCa
     <div
       className={[
         'poker-seat',
-        `poker-seat-${index}`,
         isActive ? 'seat-active' : '',
         player.folded ? 'seat-folded' : '',
         player.disconnected ? 'seat-disconnected' : '',
@@ -52,8 +60,9 @@ const PokerSeat = ({ player, index, totalSeats, isActive, isDealer, isMe, holeCa
         isMe ? 'seat-me' : '',
         isWinner ? 'seat-winner' : '',
       ].filter(Boolean).join(' ')}
+      style={posStyle}
     >
-      {/* Bet chips displayed between player and table center */}
+      {/* Bet chips */}
       {bet > 0 && (
         <div className="seat-bet">
           <div className="bet-chips">
@@ -134,7 +143,6 @@ const PokerSeat = ({ player, index, totalSeats, isActive, isDealer, isMe, holeCa
       {/* Winner overlay */}
       {isWinner && winnerHand && (
         <div className="winner-badge">
-          <span className="winner-trophy">🏆</span>
           <span className="winner-hand-name">{winnerHand}</span>
         </div>
       )}

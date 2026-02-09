@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import PokerSeat from './PokerSeat';
 import PokerCard from './PokerCard';
 import PokerControls from './PokerControls';
@@ -20,6 +20,26 @@ const PHASE_COLORS = {
   river: '#ef4444',
   showdown: '#a855f7',
 };
+
+/**
+ * Calculate seat positions around an ellipse.
+ * Seat 0 (the player) is always at the bottom center.
+ * Seats distribute clockwise around the table.
+ */
+function calcSeatPositions(totalSeats) {
+  const positions = [];
+  for (let i = 0; i < totalSeats; i++) {
+    // Start from bottom (6 o'clock = 90deg) and go clockwise
+    const angle = (Math.PI / 2) + (2 * Math.PI * i) / totalSeats;
+    // Ellipse: x = 50% + rx*cos, y = 50% + ry*sin
+    const rx = 50; // % horizontal radius
+    const ry = 48; // % vertical radius
+    const x = 50 - rx * Math.cos(angle);
+    const y = 50 + ry * Math.sin(angle);
+    positions.push({ left: `${x}%`, top: `${y}%` });
+  }
+  return positions;
+}
 
 const PokerGame = ({
   gameState,
@@ -49,6 +69,9 @@ const PokerGame = ({
   const activeSeat = gameState?.activeSeat ?? -1;
   const dealerSeat = gameState?.dealerSeat ?? -1;
   const totalSeats = players.length || 6;
+
+  // Calculate seat positions dynamically
+  const seatPositions = useMemo(() => calcSeatPositions(totalSeats), [totalSeats]);
 
   // Build revealed cards map from allHands
   const revealedMap = {};
@@ -118,7 +141,7 @@ const PokerGame = ({
       {/* === Top Bar === */}
       <div className="poker-game-topbar">
         <button className="topbar-btn topbar-btn-leave" onClick={onLeave}>
-          <span>←</span> Sair
+          <span>&#8592;</span> Sair
         </button>
 
         <div className="topbar-center">
@@ -138,7 +161,7 @@ const PokerGame = ({
           className="topbar-btn topbar-btn-chat"
           onClick={() => setShowChat(prev => !prev)}
         >
-          💬 {messages.length > 0 && <span className="chat-badge">{messages.length}</span>}
+          Chat {messages.length > 0 && <span className="chat-badge">{messages.length}</span>}
         </button>
       </div>
 
@@ -190,7 +213,7 @@ const PokerGame = ({
             </div>
           </div>
 
-          {/* === Seats around the table === */}
+          {/* === Seats around the table (dynamically positioned) === */}
           <div className="poker-seats-container">
             {players.map((player, i) => (
               <PokerSeat
@@ -206,6 +229,7 @@ const PokerGame = ({
                 isWinner={winnerMap[i] !== undefined}
                 winnerHand={winnerMap[i]}
                 currentBet={player?.currentBet || 0}
+                seatStyle={seatPositions[i]}
               />
             ))}
           </div>
@@ -221,7 +245,7 @@ const PokerGame = ({
             {phase === 'waiting'
               ? 'Aguardando mais jogadores...'
               : winners.length > 0
-                ? '🏆 Mão encerrada!'
+                ? 'Mao encerrada!'
                 : 'Aguardando sua vez...'}
           </div>
         )}
@@ -231,7 +255,7 @@ const PokerGame = ({
             className="finalize-btn"
             onClick={() => onFinalize(tableId)}
           >
-            Finalizar Mão (Settle)
+            Finalizar Mao (Settle)
           </button>
         )}
       </div>
@@ -241,7 +265,7 @@ const PokerGame = ({
         <div className="poker-chat-panel">
           <div className="poker-chat-header">
             <span>Chat da Mesa</span>
-            <button className="chat-close-btn" onClick={() => setShowChat(false)}>✕</button>
+            <button className="chat-close-btn" onClick={() => setShowChat(false)}>X</button>
           </div>
           <div className="poker-chat-messages" ref={chatRef}>
             {messages.map((m, i) => (
@@ -264,7 +288,7 @@ const PokerGame = ({
               className="chat-input-field"
             />
             <button className="chat-send-btn" onClick={handleSendChat}>
-              ➤
+              Enviar
             </button>
           </div>
         </div>
