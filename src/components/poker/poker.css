@@ -1898,7 +1898,7 @@ html, body {
   /* Game top bar compact */
   .poker-game {
     padding: 0 0.25rem;
-    min-height: auto;
+    min-height: calc(100vh - 5.5rem);
   }
   .poker-game-topbar {
     padding: 0.35rem 0.5rem;
@@ -1918,15 +1918,16 @@ html, body {
 
   /* === MOBILE: Vertical table (taller than wide) === */
   .poker-table-wrapper {
-    min-height: 28rem;
-    padding: 1.5rem 0 0.5rem;
-    align-items: flex-start;
+    min-height: 0;
+    padding: 0.5rem 0 0.25rem;
+    align-items: center;
+    flex: 1;
   }
 
   .poker-table-area {
-    /* Vertical orientation: taller than wide */
-    width: min(85vw, 22rem);
-    aspect-ratio: 0.7 / 1;
+    /* Vertical orientation: fill most of the screen */
+    width: min(94vw, 30rem);
+    aspect-ratio: 0.65 / 1;
   }
 
   .poker-rail {
@@ -2057,7 +2058,7 @@ html, body {
 
 @media (max-width: 400px) {
   .poker-table-area {
-    width: min(90vw, 18rem);
+    width: min(96vw, 24rem);
   }
 
   .poker-seats-container { inset: -0.75rem; }
@@ -2083,7 +2084,6 @@ html, body {
     height: 2.2rem;
   }
 
-  .poker-table-wrapper { min-height: 22rem; }
   .felt-logo { font-size: 1.5rem; }
 
   .community-cards { max-width: 8rem; }
@@ -2097,7 +2097,7 @@ html, body {
 
 @media (max-width: 320px) {
   .poker-table-area {
-    width: min(92vw, 15rem);
+    width: min(96vw, 20rem);
   }
 
   .poker-seats-container { inset: -0.5rem; }
