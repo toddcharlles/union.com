@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CHAIN_CONFIG, CONTRACTS, formatEther } from '../config';
 import logo from '../assets/unionzod-logo.png';
-import GlobalChat from './GlobalChat';
+import GlobalChat from './chat/GlobalChat';
 
 const WalletConnect = ({ account, isConnecting, connect, disconnect, isCorrectNetwork, switchNetwork, error, contracts }) => {
   const [balances, setBalances] = useState({
