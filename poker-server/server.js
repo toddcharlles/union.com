@@ -98,6 +98,16 @@ let blockchainEnabled = false;
 const playerWallets = new Map();  // playerId -> wallet (lowercase)
 const socketWallets = new Map();  // socket.id -> wallet (lowercase)
 
+// Admin wallets — podem criar/gerenciar mesas off-chain
+const ADMIN_WALLETS = new Set([
+  (process.env.ADMIN_WALLET || '0xeb1c187a7f6cd92e86032abe2808419d78ceca38').toLowerCase(),
+]);
+
+function isAdmin(socketId) {
+  const wallet = socketWallets.get(socketId);
+  return wallet && ADMIN_WALLETS.has(wallet.toLowerCase());
+}
+
 // Mapeamentos para múltiplas mesas
 const tables = new Map();         // tableIdText (string) -> objeto de estado da mesa
 const tableContracts = new Map(); // tableIdText -> instância do contrato ethers.Contract
@@ -897,7 +907,7 @@ function startHand(table) {
     table.actionsThisRound = 0;
     table.lastAggressor = -1;
     table.currentBet = 0;
-    table.minRaise = TABLE_CONFIG.bigBlind;
+    table.minRaise = table.customBlinds?.bigBlind || TABLE_CONFIG.bigBlind;
     table.actionsThisRound = 0;
     table.lastAggressor = -1;
     table.canFinalize = false;
@@ -937,8 +947,12 @@ function startHand(table) {
       }
     });
 
-    const smallBlind = table.tournamentId ? TOURNAMENT_CONFIG.blindSchedule[table.blindLevel].smallBlind : TABLE_CONFIG.smallBlind;
-    const bigBlind = table.tournamentId ? TOURNAMENT_CONFIG.blindSchedule[table.blindLevel].bigBlind : TABLE_CONFIG.bigBlind;
+    const smallBlind = table.tournamentId
+      ? TOURNAMENT_CONFIG.blindSchedule[table.blindLevel].smallBlind
+      : (table.customBlinds?.smallBlind || TABLE_CONFIG.smallBlind);
+    const bigBlind = table.tournamentId
+      ? TOURNAMENT_CONFIG.blindSchedule[table.blindLevel].bigBlind
+      : (table.customBlinds?.bigBlind || TABLE_CONFIG.bigBlind);
 
     const sbSeat = findNextActive(table.dealerSeat, table);
     const bbSeat = findNextActive(sbSeat, table);
@@ -1850,12 +1864,75 @@ io.on("connection", (socket) => {
       .filter(table => !table.tournamentId)
       .map(table => ({
         id: table.id,
+        name: table.name || table.id,
         players: table.players.filter(Boolean).length,
         maxPlayers: table.players.length,
         phase: table.phase,
-        isPublic: table.isPublic
+        isPublic: table.isPublic,
+        blinds: table.customBlinds
+          ? `${table.customBlinds.smallBlind}/${table.customBlinds.bigBlind}`
+          : `${TABLE_CONFIG.smallBlind}/${TABLE_CONFIG.bigBlind}`
       }));
     socket.emit("tableList", tableList);
+  });
+
+  // === ADMIN: criar mesa off-chain ===
+  socket.on("createTable", ({ name, seats, smallBlind, bigBlind }) => {
+    if (!isAdmin(socket.id)) {
+      return socket.emit("errorMsg", "Apenas administradores podem criar mesas.");
+    }
+    if (TABLE_CONFIG.blockchainMode) {
+      return socket.emit("errorMsg", "No modo on-chain, mesas sao criadas via contrato.");
+    }
+
+    const tableSeats = Math.min(Math.max(Number(seats) || 6, 2), 10);
+    const sb = Math.max(Number(smallBlind) || TABLE_CONFIG.smallBlind, 1);
+    const bb = Math.max(Number(bigBlind) || TABLE_CONFIG.bigBlind, sb * 2);
+    const tableName = (name || "").trim().slice(0, 30) || `Mesa ${tables.size + 1}`;
+    const tableId = `offchain-${nanoid(8)}`;
+
+    const table = createTable(tableId, tableSeats);
+    table.name = tableName;
+    table.customBlinds = { smallBlind: sb, bigBlind: bb };
+    table.isPublic = true;
+    tables.set(tableId, table);
+    markActivity(tableId);
+
+    console.log(`🃏 Mesa criada por admin: ${tableName} (${tableId}) — ${tableSeats} assentos, blinds ${sb}/${bb}`);
+
+    // Notificar todos os clientes
+    const tableInfo = {
+      id: tableId,
+      name: tableName,
+      players: 0,
+      maxPlayers: tableSeats,
+      phase: "waiting",
+      isPublic: true,
+      blinds: `${sb}/${bb}`
+    };
+    io.emit("newTable", tableInfo);
+    socket.emit("tableCreated", tableInfo);
+    socket.emit("systemMessage", `Mesa "${tableName}" criada com sucesso!`);
+  });
+
+  // === ADMIN: deletar mesa off-chain ===
+  socket.on("deleteTable", ({ tableId }) => {
+    if (!isAdmin(socket.id)) {
+      return socket.emit("errorMsg", "Apenas administradores podem deletar mesas.");
+    }
+    const table = tables.get(tableId);
+    if (!table) {
+      return socket.emit("errorMsg", "Mesa nao encontrada.");
+    }
+    const activePlayers = table.players.filter(Boolean).length;
+    if (activePlayers > 0) {
+      return socket.emit("errorMsg", `Mesa tem ${activePlayers} jogador(es). Aguarde saida.`);
+    }
+    tables.delete(tableId);
+    tableLocks.delete(tableId);
+    io.emit("tableRemoved", { tableId });
+    socket.emit("systemMessage", `Mesa "${table.name || tableId}" removida.`);
+    console.log(`🗑️ Mesa removida por admin: ${table.name || tableId} (${tableId})`);
   });
 
   socket.on("disconnect", () => {

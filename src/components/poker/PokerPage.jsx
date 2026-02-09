@@ -33,6 +33,8 @@ const PokerPage = ({ account, onBack }) => {
     sendChat,
     refreshTables,
     finalizeHand,
+    createTable,
+    deleteTable,
   } = usePokerSocket(account);
 
   const handleJoinTable = useCallback((tableId, name, buyin) => {
@@ -121,6 +123,9 @@ const PokerPage = ({ account, onBack }) => {
           connected={connected}
           onConnect={connect}
           mode={mode}
+          isAdmin={isAdmin}
+          onCreateTable={createTable}
+          onDeleteTable={deleteTable}
         />
       ) : (
         <PokerGame

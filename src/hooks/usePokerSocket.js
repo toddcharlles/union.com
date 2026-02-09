@@ -127,6 +127,21 @@ export function usePokerSocket(account) {
       setAllHands([]);
     });
 
+    socket.on('newTable', (table) => {
+      setTables(prev => {
+        if (prev.some(t => t.id === table.id)) return prev;
+        return [...prev, table];
+      });
+    });
+
+    socket.on('tableRemoved', ({ tableId }) => {
+      setTables(prev => prev.filter(t => t.id !== tableId));
+    });
+
+    socket.on('tableCreated', (table) => {
+      setLastEvent({ type: 'tableCreated', data: table });
+    });
+
     socketRef.current = socket;
   }, [account]);
 
@@ -188,6 +203,16 @@ export function usePokerSocket(account) {
     socketRef.current.emit('finalizeHand', { tableId });
   }, []);
 
+  const createTable = useCallback(({ name, seats, smallBlind, bigBlind }) => {
+    if (!socketRef.current?.connected) return;
+    socketRef.current.emit('createTable', { name, seats, smallBlind, bigBlind });
+  }, []);
+
+  const deleteTable = useCallback((tableId) => {
+    if (!socketRef.current?.connected) return;
+    socketRef.current.emit('deleteTable', { tableId });
+  }, []);
+
   useEffect(() => {
     return () => {
       if (socketRef.current) {
@@ -217,5 +242,7 @@ export function usePokerSocket(account) {
     sendChat,
     refreshTables,
     finalizeHand,
+    createTable,
+    deleteTable,
   };
 }

@@ -1143,3 +1143,71 @@
   .admin-footer { flex-direction: column; }
   .admin-footer .poker-btn { width: 100%; }
 }
+
+/* ============================== */
+/* Admin Create Table Section     */
+/* ============================== */
+.poker-admin-section {
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
+
+.poker-create-form {
+  background: linear-gradient(135deg, #064e3b, #065f46);
+  border: 1px solid #34d399;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.poker-create-form h3 {
+  color: #6ee7b7;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.create-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.create-form-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.poker-btn-danger {
+  background: #dc2626;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.poker-btn-danger:hover {
+  background: #b91c1c;
+}
+
+.table-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.table-card-actions .poker-btn-sm {
+  flex: 1;
+}
+
+.table-card-actions .poker-btn-danger {
+  flex: 0 0 auto;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 480px) {
+  .create-form-grid { grid-template-columns: 1fr; }
+  .create-form-actions { flex-direction: column; }
+  .create-form-actions .poker-btn { width: 100%; }
+}
