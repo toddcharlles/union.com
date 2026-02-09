@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import PokerSeat from './PokerSeat';
 import PokerCard from './PokerCard';
 import PokerControls from './PokerControls';
@@ -24,21 +24,36 @@ const PHASE_COLORS = {
 /**
  * Calculate seat positions around an ellipse.
  * Seat 0 (the player) is always at the bottom center.
- * Seats distribute clockwise around the table.
+ * On mobile (portrait), the ellipse is vertical (taller than wide).
+ * On desktop, the ellipse is horizontal (wider than tall).
+ * Seats are pulled closer to the table for better use of space.
  */
-function calcSeatPositions(totalSeats) {
+function calcSeatPositions(totalSeats, isMobile) {
   const positions = [];
+  // On mobile: vertical ellipse (rx < ry) / On desktop: horizontal (rx > ry)
+  const rx = isMobile ? 38 : 46;
+  const ry = isMobile ? 44 : 42;
+
   for (let i = 0; i < totalSeats; i++) {
     // Start from bottom (6 o'clock = 90deg) and go clockwise
     const angle = (Math.PI / 2) + (2 * Math.PI * i) / totalSeats;
-    // Ellipse: x = 50% + rx*cos, y = 50% + ry*sin
-    const rx = 50; // % horizontal radius
-    const ry = 48; // % vertical radius
     const x = 50 - rx * Math.cos(angle);
     const y = 50 + ry * Math.sin(angle);
     positions.push({ left: `${x}%`, top: `${y}%` });
   }
   return positions;
+}
+
+function useIsMobile(breakpoint = 640) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth <= breakpoint : false
+  );
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= breakpoint);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [breakpoint]);
+  return isMobile;
 }
 
 const PokerGame = ({
@@ -69,9 +84,10 @@ const PokerGame = ({
   const activeSeat = gameState?.activeSeat ?? -1;
   const dealerSeat = gameState?.dealerSeat ?? -1;
   const totalSeats = players.length || 6;
+  const isMobile = useIsMobile(640);
 
-  // Calculate seat positions dynamically
-  const seatPositions = useMemo(() => calcSeatPositions(totalSeats), [totalSeats]);
+  // Calculate seat positions dynamically based on screen orientation
+  const seatPositions = useMemo(() => calcSeatPositions(totalSeats, isMobile), [totalSeats, isMobile]);
 
   // Build revealed cards map from allHands
   const revealedMap = {};

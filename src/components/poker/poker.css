@@ -1810,12 +1810,15 @@
 
 @media (max-width: 768px) {
   .poker-table-area {
-    aspect-ratio: 1.6 / 1;
+    width: min(95%, 36rem);
+    aspect-ratio: 1.5 / 1;
   }
 
   .poker-rail {
     padding: 0.5rem;
   }
+
+  .poker-seats-container { inset: -2rem; }
 
   .pcard-community {
     width: 2.5rem;
@@ -1832,54 +1835,97 @@
   .poker-lobby-header { flex-direction: column; align-items: flex-start; }
   .poker-lobby-setup { grid-template-columns: 1fr; }
 
+  /* === MOBILE: Vertical table (taller than wide) === */
   .poker-table-wrapper {
-    min-height: 20rem;
-    padding: 0.5rem 0;
+    min-height: 28rem;
+    padding: 0.25rem 0;
   }
 
   .poker-table-area {
-    aspect-ratio: 1.5 / 1;
+    /* Vertical orientation: taller than wide */
+    width: min(85vw, 22rem);
+    aspect-ratio: 0.7 / 1;
   }
 
-  .poker-rail { padding: 0.4rem; }
+  .poker-rail {
+    padding: 0.35rem;
+    border-radius: 42%;
+  }
 
-  .poker-seats-container { inset: -1.5rem; }
+  .poker-felt {
+    border-radius: 40%;
+  }
+
+  .felt-border-line {
+    border-radius: 40%;
+  }
+
+  /* Seats container - tighter to table */
+  .poker-seats-container { inset: -1rem; }
 
   .seat-avatar { width: 2.25rem; height: 2.25rem; }
   .seat-avatar-letter { font-size: 0.85rem; }
-  .seat-info-bar { min-width: 4rem; padding: 0.15rem 0.35rem; }
-  .seat-name { font-size: 0.58rem; max-width: 4rem; }
-  .seat-stack { font-size: 0.55rem; }
+  .seat-info-bar { min-width: 3.75rem; padding: 0.12rem 0.3rem; }
+  .seat-name { font-size: 0.55rem; max-width: 3.75rem; }
+  .seat-stack { font-size: 0.52rem; }
+  .seat-label { font-size: 0.5rem; }
 
-  .pcard-sm { width: 1.5rem; height: 2.1rem; }
-  .pcard-sm .pcard-rank { font-size: 0.5rem; }
+  .pcard-sm { width: 1.4rem; height: 2rem; }
+  .pcard-sm .pcard-rank { font-size: 0.48rem; }
   .pcard-sm .pcard-suit-mini { font-size: 0.35rem; }
-  .pcard-sm .pcard-center-suit { font-size: 0.7rem; }
+  .pcard-sm .pcard-center-suit { font-size: 0.65rem; }
 
-  .pcard-community {
-    width: 2.25rem;
-    height: 3.15rem;
+  /* Community cards - smaller on mobile, stacked in a row */
+  .community-cards {
+    gap: 0.2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 10rem;
   }
-
-  .ctrl-btn { padding: 0.5rem 0.875rem; min-width: 3.5rem; }
-  .ctrl-label { font-size: 0.7rem; }
-
-  .felt-logo { font-size: 2.5rem; }
-
-  .poker-chat-panel { width: 100vw; }
-}
-
-@media (max-width: 400px) {
-  .poker-seats-container { inset: -1.5rem; }
-  .seat-avatar { width: 2rem; height: 2rem; }
-  .seat-avatar-letter { font-size: 0.75rem; }
-  .seat-info-bar { min-width: 3.5rem; }
 
   .pcard-community {
     width: 2rem;
     height: 2.8rem;
   }
-  .pcard-community .pcard-center-suit { font-size: 1rem; }
+  .pcard-community .pcard-rank { font-size: 0.65rem; }
+  .pcard-community .pcard-suit-mini { font-size: 0.5rem; }
+  .pcard-community .pcard-center-suit { font-size: 1.1rem; }
+  .pcard-community .pcard-corner-tl { top: 0.12rem; left: 0.15rem; }
+  .pcard-community .pcard-corner-br { bottom: 0.12rem; right: 0.15rem; }
+
+  .ctrl-btn { padding: 0.45rem 0.75rem; min-width: 3.25rem; }
+  .ctrl-label { font-size: 0.68rem; }
+  .ctrl-icon { font-size: 0.75rem; }
+  .ctrl-amount { font-size: 0.58rem; }
+
+  .felt-logo { font-size: 2rem; }
+  .felt-pot { padding: 0.15rem 0.5rem 0.15rem 0.35rem; }
+  .felt-pot-value { font-size: 0.65rem; }
+
+  .poker-chat-panel { width: 100vw; }
+
+  /* Controls tighter */
+  .poker-controls { padding: 0.5rem 0.75rem; }
+  .controls-actions { gap: 0.35rem; }
+  .controls-raise-section { margin-top: 0.4rem; padding-top: 0.4rem; }
+}
+
+@media (max-width: 400px) {
+  .poker-table-area {
+    width: min(90vw, 18rem);
+  }
+
+  .poker-seats-container { inset: -0.75rem; }
+  .seat-avatar { width: 2rem; height: 2rem; }
+  .seat-avatar-letter { font-size: 0.75rem; }
+  .seat-info-bar { min-width: 3.25rem; padding: 0.1rem 0.25rem; }
+  .seat-name { font-size: 0.5rem; max-width: 3.25rem; }
+
+  .pcard-community {
+    width: 1.75rem;
+    height: 2.45rem;
+  }
+  .pcard-community .pcard-center-suit { font-size: 0.9rem; }
 }
 
 @media (max-width: 480px) {
