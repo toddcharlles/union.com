@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { CONTRACTS, ABIS, CHAIN_CONFIG, formatEther } from '../config';
 
-const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
+const LandingPage = ({ connect, isConnecting, onOpenWhitepaper, onOpenPoker }) => {
   const [stats, setStats] = useState({
     floorPrice: '0.00',
     circulatingSupply: '0',
@@ -124,10 +124,10 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
         {/* How It Works */}
         <div className="mb-8">
           <h2 className="text-lg font-bold text-white text-center mb-6">Como Funciona</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
             <div className="card text-center hover:shadow-xl transition-shadow duration-200">
-              <div className="text-4xl mb-3">⛏️</div>
+              <div className="text-4xl mb-3">&#9935;</div>
               <h3 className="text-lg font-bold text-gray-800 mb-2">Mining</h3>
               <p className="text-sm text-gray-600">
                 Compre poder de mineracao com USDT e ganhe ZOD automaticamente ao longo do tempo!
@@ -135,7 +135,7 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
             </div>
 
             <div className="card text-center hover:shadow-xl transition-shadow duration-200">
-              <div className="text-4xl mb-3">👥</div>
+              <div className="text-4xl mb-3">&#128101;</div>
               <h3 className="text-lg font-bold text-gray-800 mb-2">Rede de Mineradores</h3>
               <p className="text-sm text-gray-600">
                 Construa sua rede de mineradores e ganhe boosts de mineracao em ate 5 niveis!
@@ -143,11 +143,22 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
             </div>
 
             <div className="card text-center hover:shadow-xl transition-shadow duration-200">
-              <div className="text-4xl mb-3">💧</div>
+              <div className="text-4xl mb-3">&#128167;</div>
               <h3 className="text-lg font-bold text-gray-800 mb-2">Pool</h3>
               <p className="text-sm text-gray-600">
                 Troque ZOD por USDT no pool on-chain a qualquer momento com preco floor garantido!
               </p>
+            </div>
+
+            <div className="card text-center hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-200 border-emerald-200 bg-gradient-to-br from-white to-emerald-50 cursor-pointer group" onClick={onOpenPoker}>
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">&#9824;</div>
+              <h3 className="text-lg font-bold text-emerald-800 mb-2">ZOD Poker</h3>
+              <p className="text-sm text-emerald-700">
+                Jogue Texas Hold'em multiplayer com chips tokenizados on-chain na BSC!
+              </p>
+              <span className="inline-block mt-2 text-xs font-bold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
+                NOVO
+              </span>
             </div>
 
           </div>

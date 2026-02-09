@@ -12,11 +12,14 @@ import LandingPage from './components/LandingPage';
 import Whitepaper from './components/Whitepaper';
 import CapturePage from './components/CapturePage';
 import DebugInfo from './components/DebugInfo';
+import PokerPage from './components/poker/PokerPage';
+import './components/poker/poker.css';
 import './index.css';
 
 function App() {
   const [showWhitepaper, setShowWhitepaper] = useState(false);
   const [showCapturePage, setShowCapturePage] = useState(false);
+  const [showPoker, setShowPoker] = useState(false);
   const [referrerFromUrl, setReferrerFromUrl] = useState(null);
   const autoConnectAttempted = useRef(false);
   const {
@@ -78,6 +81,28 @@ function App() {
     }
   }, [isConnected, isConnecting, connect]);
 
+  // Poker fullscreen mode
+  if (showPoker) {
+    return (
+      <div className="min-h-screen">
+        <WalletConnect
+          account={account}
+          isConnecting={isConnecting}
+          connect={connect}
+          disconnect={disconnect}
+          isCorrectNetwork={isCorrectNetwork}
+          switchNetwork={switchNetwork}
+          error={error}
+          contracts={contracts}
+        />
+        <PokerPage
+          account={account}
+          onBack={() => setShowPoker(false)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {/* Barra superior com conexão */}
@@ -102,6 +127,7 @@ function App() {
             connect={connect}
             isConnecting={isConnecting}
             onOpenWhitepaper={() => setShowWhitepaper(true)}
+            onOpenPoker={() => setShowPoker(true)}
           />
         )}
 
@@ -128,6 +154,27 @@ function App() {
               account={account}
               isCorrectNetwork={isCorrectNetwork}
             />
+
+            {/* Poker Access Card */}
+            <div className="card bg-gradient-to-r from-emerald-900 to-teal-900 border-emerald-700 cursor-pointer hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300" onClick={() => setShowPoker(true)}>
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl sm:text-5xl" style={{ lineHeight: 1 }}>♠</div>
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-1">ZOD Poker</h3>
+                    <p className="text-sm text-emerald-300 opacity-80">
+                      Poker multiplayer on-chain. Jogue Texas Hold'em com chips tokenizados na BSC.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2.5 px-6 rounded-xl transition-colors text-sm shadow-lg shadow-emerald-500/30"
+                  onClick={(e) => { e.stopPropagation(); setShowPoker(true); }}
+                >
+                  Jogar Agora &#8594;
+                </button>
+              </div>
+            </div>
 
             {/* Row 1: Pool Swap */}
             <PoolSwap
