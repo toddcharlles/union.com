@@ -1,0 +1,38 @@
+{
+  "name": "zodpoker-hybrid",
+  "version": "2.0.0",
+  "description": "Sistema híbrido on-chain/off-chain de poker multiplayer com blockchain",
+  "type": "module",
+  "main": "poker-server-hybrid.js",
+  "scripts": {
+    "start": "node poker-server-hybrid.js",
+    "dev": "nodemon poker-server-hybrid.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "poker",
+    "blockchain",
+    "web3",
+    "socket.io",
+    "bsc",
+    "hybrid"
+  ],
+  "author": "ZodPoker Team",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "ethers": "^6.15.0",
+    "express": "^4.21.2",
+    "nanoid": "^4.0.2",
+    "poker-evaluator": "^2.1.1",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

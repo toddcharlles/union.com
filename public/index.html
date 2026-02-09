@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎰 ZodPoker Hybrid (On-chain + Off-chain)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+
+    <!-- Cliente Socket.IO -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <!-- Ethers v6 com fallbacks robustos -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"></script>
+    <script>
+      if (!window.ethers) {
+        document.write('<script src="https://unpkg.com/ethers@6.15.0/dist/ethers.umd.min.js"><\/script>');
+      }
+    </script>
+    <script>
+      if (!window.ethers) {
+        document.write('<script src="ethers.umd.min.js"><\/script>');
+      }
+    </script>
+
+    <!-- Seus estilos -->
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles_blockchain.css" />
+    <link rel="stylesheet" href="styles_theme_space.css" />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='50%25' x='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48'%3E🎰%3C/text%3E%3C/svg%3E"
+    >
+
+    <style>
+      /* Tabs principais e subtabs (mantido) */
+      .tab-content { display: none; }
+      .tab-content.active { display: block; }
+      .subtab-content { display: none; }
+      .subtab-content.active { display: block; }
+
+      /* ===== HERO (vídeo cabeçalho) ===== */
+      .hero-video{
+        width: 100%;
+        display: block;
+        max-width: 1400px;
+        margin: 8px auto 16px;
+        padding: 0 16px;
+      }
+      .hero-video__wrap{
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        background: rgba(0,0,0,.35);
+        border: 1px solid rgba(255,255,255,.08);
+      }
+      .hero-video__media{
+        width: 100%;
+        height: clamp(180px, 32vh, 420px);
+        object-fit: cover;
+        display: block;
+      }
+      .hero-video__overlay{
+        position: absolute; inset: 0; pointer-events: none;
+        background:
+          linear-gradient(180deg, rgba(0,0,0,.00) 0%, rgba(0,0,0,.18) 55%, rgba(0,0,0,.28) 100%),
+          radial-gradient(80% 60% at 50% 0%, rgba(124,92,255,.12), transparent 60%);
+      }
+
+      /* Barra de ações sobre o vídeo (menu, tema, conectar) */
+      .hero-actions{
+        position: absolute; top: 0; left: 0; right: 0;
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 16px; z-index: 2000;
+      }
+      .hero-actions__left{ display:flex; align-items:center; gap:8px; }
+      .hero-actions__right{ display:flex; align-items:center; gap:10px; }
+
+      /* Botões com contraste melhor no tema */
+      .hamburger{
+        width: 42px; height: 42px; border-radius: 12px; cursor: pointer;
+        display: grid; place-items: center; font-size: 20px;
+        background: #0f1730; color: #fff; border: 1px solid #233055;
+      }
+      .icon-btn{
+        background: #0f1730; color: #fff; border: 1px solid #233055;
+        border-radius: 12px; padding: 10px; font-size: 16px; cursor: pointer;
+      }
+      .top-connect{
+        padding: 10px 16px; border-radius: 12px; font-weight: 800;
+        background: #0f1730; color: #fff; border: 1px solid #233055;
+      }
+      body.theme-space .hamburger,
+      body.theme-space .icon-btn,
+      body.theme-space .top-connect{
+        color: #fff !important; text-shadow: 0 1px 2px rgba(0,0,0,.35);
+        border-color: rgba(255,255,255,.28);
+      }
+
+      /* Menu lateral (abre pelo hambúrguer) — ocupa a lateral toda em altura */
+      .side-menu{
+        position: fixed; top: 60px; left: 12px;
+        width: min(86vw, 320px);
+        max-height: calc(100vh - 72px);
+        padding: 14px;
+        background: rgba(15, 23, 48, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        box-shadow: 0 20px 50px rgba(0,0,0,.5);
+        display: none; flex-direction: column; gap: 10px; z-index: 2001;
+        overflow: auto;
+      }
+      .side-menu.open{ display:flex; }
+      .side-menu .menu-item{
+        text-align: left; padding: 12px; border-radius: 10px; cursor: pointer;
+        background: #0f1730; border: 1px solid #233055; color: #fff; font-weight: 700;
+      }
+      .side-menu .menu-item:hover,
+      .side-menu .menu-item:focus-visible{
+        background: #0c1226; outline: 2px solid var(--accent, #6ee7ff); outline-offset: 2px;
+      }
+
+      /* Esconder elementos antigos de ação duplicada */
+      .mini-actions{ display:none !important; }
+      .menu-container{ display:none !important; }
+
+      /* Canvas estrelas de fundo */
+      #stars-bg{
+        position: fixed; inset: 0; z-index: -1; pointer-events: none; background: transparent;
+      }
+
+      /* ===== Em modo in-game, esconder hero e menu topo para dedicar à mesa ===== */
+      body.in-game .hero-video,
+      body.in-game header.top-nav{ display: none !important; }
+      body.in-game .side-menu{ display: none !important; }
+
+      /* ===== Portrait friendly (Trust Wallet / sem rotação) ===== */
+      body.portrait-game .hero-video,
+      body.portrait-game header.top-nav{ display: none !important; }
+
+      .game-viewport{
+        position: relative; width: 100vw; height: calc(100vh - 12px);
+        overflow: hidden; margin: 0;
+      }
+      /* Centraliza a mesa e permite escala via --table-scale */
+      .game-viewport .holdem{
+        position: absolute; left: 50%; top: 50%;
+        transform-origin: center;
+        transform: translate(-50%, -50%) scale(var(--table-scale, 1));
+      }
+      /* Dock de ações fixo no rodapé em retrato */
+      body.portrait-game .action-dock .controls{
+        position: fixed !important; left: 8px; right: 8px; bottom: 8px; z-index: 50;
+      }
+      /* Chat sobe para não conflitar com dock */
+      body.portrait-game .chat-container{ bottom: 90px; }
+
+      /* Mesa um pouco mais alta no retrato para leitura */
+      body.portrait-game .felt{ height: 520px; max-width: 950px; }
+
+      /* Botão do menu mais visível no tema space */
+      body.theme-space .side-menu .menu-item{ color:#fff; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+
+      /* Top bar placeholder (mantido vazio) */
+      .top-nav{
+        position: sticky; top: 0; z-index: 2000; width: 100%; height: 0; padding: 0; border: 0; background: transparent;
+      }
+
+      /* Dica de rotação (quando não conseguimos travar landscape) */
+      .rotate-hint{
+        position: fixed; inset: 0; display: none; place-items: center;
+        background: rgba(0,0,0,.55); z-index: 4000;
+      }
+      .rotate-hint.show{ display: grid; }
+      .rotate-hint .box{
+        background: rgba(15,15,30,.92);
+        border: 1px solid rgba(255,255,255,.15);
+        border-radius: 12px; padding: 16px 18px; max-width: 460px; color: #fff; text-align: center;
+      }
+    </style>
+  </head>
+  
+
+  <body class="neon">
+    <!-- HERO: vídeo em loop como cabeçalho responsivo -->
+    <section class="hero-video">
+      <div class="hero-video__wrap glow">
+        <video
+          class="hero-video__media"
+          src="grok-video-d8c57a51-289b-4bbd-bebd-5dcbb00bdd6a-0.mp4"
+          autoplay muted loop playsinline preload="metadata" poster=""
+        ></video>
+        <div class="hero-video__overlay"></div>
+
+        <!-- Barra de ações sobre o vídeo -->
+        <div class="hero-actions">
+          <div class="hero-actions__left">
+            <button id="hamburgerBtn" class="hamburger" aria-label="Abrir menu" onclick="toggleSideMenu()" title="Menu">
+              <span style="display:block;width:18px;height:14px;position:relative;">
+                <span style="position:absolute;left:0;right:0;top:0;height:2px;background:currentColor;border-radius:2px;"></span>
+                <span style="position:absolute;left:0;right:0;top:6px;height:2px;background:currentColor;border-radius:2px;"></span>
+                <span style="position:absolute;left:0;right:0;top:12px;height:2px;background:currentColor;border-radius:2px;"></span>
+              </span>
+            </button>
+          </div>
+          <div class="hero-actions__right">
+            <button class="icon-btn" onclick="showBlockchainModal()" title="Blockchain">🔗</button>
+            <button id="themeToggle" class="icon-btn" onclick="document.body.classList.toggle('theme-space')" title="Alternar tema">🎨</button>
+            <button
+              id="walletConnectTop"
+              class="btn btn-accent top-connect"
+              onclick="isWalletConnected ? showBlockchainModal() : connectWallet()"
+            >
+              Conectar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Header mantido vazio apenas para manter grid/top spacing -->
+    <header class="top-nav"></header>
+
+    <!-- Fundo animado de estrelas -->
+    <canvas id="stars-bg"></canvas>
+
+    <!-- Menu lateral -->
+    <nav id="sideMenu" class="side-menu" aria-label="Menu lateral">
+      <button class="menu-item" onclick="showTab('lobbyTab'); closeSideMenu()">🏠 Lobby de Mesas</button>
+      <button class="menu-item" onclick="showCreateTableModal(); closeSideMenu()">🎴 Criar Nova Mesa</button>
+      <button class="menu-item" onclick="showImportTableModal(); closeSideMenu()">📥 Importar Mesa</button>
+      <button class="menu-item" onclick="showTablesManager(); closeSideMenu()">⚙️ Gerenciar Mesas</button>
+      <button class="menu-item" onclick="showTab('chipsTab'); closeSideMenu()">💰 Gerenciar Fichas</button>
+    </nav>
+
+    <!-- DASHBOARD / TELA INICIAL -->
+    <div class="app-grid" id="loginScreen">
+      <!-- Coluna esquerda -->
+      <aside class="rail-left">
+        <section class="card brand-card">
+          <div class="brand">
+            <span class="logomark">Z</span>
+            <div class="brand-text"><h1>ZodPoker</h1></div>
+          </div>
+          <button
+            id="walletConnectButton"
+            class="btn btn-accent block"
+            onclick="isWalletConnected ? showBlockchainModal() : connectWallet()"
+            style="display: none"
+          >
+            Conectar Carteira
+          </button>
+          <div id="walletInfo" class="wallet-info" style="display: none;"></div>
+        </section>
+        <div class="mini-actions">
+          <button id="openCreateTableButton" class="btn" onclick="showCreateTableModal()">Criar Mesa</button>
+        </div>
+      </aside>
+
+      <!-- Palco central -->
+      <main class="stage">
+        <div class="menu-container"></div>
+
+        <!-- Lobby -->
+        <section id="lobbyTab" class="card lobby-main tab-content top-tab active">
+          <header class="card-title">
+            <h2>🏠 Lobby de Mesas da Comunidade</h2>
+          </header>
+          <div class="lobby-controls">
+            <input type="text" id="lobbySearch" placeholder="🔍 Buscar mesa..." onkeyup="filterTables()" />
+            <button onclick="refreshLobby()" class="btn-secondary">🔄 Atualizar</button>
+          </div>
+          <!-- Preferências do jogador (nome + buy-in) -->
+          <div class="player-join-prefs">
+            <label class="field">
+              <span>👤 Nome do jogador</span>
+              <input id="playerName" type="text" placeholder="ex: Jogador"
+                    minlength="3" maxlength="16" autocomplete="nickname" />
+            </label>
+          </div>
+          <div class="tables-container">
+            <div id="lobbyStatus" style="text-align: center; padding: 20px;">Carregando mesas...</div>
+            <div id="tablesList" class="tables-grid"></div>
+          </div>
+        </section>
+
+        <!-- Gerenciar Fichas -->
+        <section id="chipsTab" class="card chips-main tab-content top-tab">
+          <header class="card-title">
+            <h2>💰 Gerenciar Fichas</h2>
+          </header>
+
+          <div class="balance-summary">
+            <div class="balance-card">
+              <h3>👛 Sua Carteira</h3>
+              <div class="balance-amount" id="walletBalanceChips">0 CHIPS</div>
+              <small>Saldo disponível para transferir</small>
+            </div>
+            <div class="balance-card">
+              <h3>🎴 Mesa Atual</h3>
+              <div class="balance-amount" id="tableBalanceChips">0 CHIPS</div>
+              <small id="currentTableName">Nenhuma mesa selecionada</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="tableSelector">🎯 Selecionar Mesa:</label>
+            <select id="tableSelector" onchange="updateTableSelection()">
+              <option value="">-- Escolha uma mesa --</option>
+            </select>
+            <small class="help-inline">Escolha em qual mesa você quer depositar ou sacar fichas</small>
+          </div>
+
+          <div class="chips-actions" id="chipsActions" style="display: none;">
+            <div class="action-section">
+              <h4>⬇️ Depositar na Mesa</h4>
+              <div class="input-group">
+                <input type="number" id="depositAmount-cm" placeholder="Quantidade de CHIPS" min="1" step="1" />
+                <button id="depositBtn" onclick="depositToSelectedTable()" class="btn-primary">Depositar</button>
+              </div>
+              <div class="quick-actions">
+                <button onclick="setDepositAmount(1000)" class="btn-sm">1K</button>
+                <button onclick="setDepositAmount(5000)" class="btn-sm">5K</button>
+                <button onclick="setDepositAmount(10000)" class="btn-sm">10K</button>
+                <button onclick="setDepositAmount(50000)" class="btn-sm">50K</button>
+              </div>
+            </div>
+            <div class="action-section">
+              <h4>⬆️ Sacar da Mesa</h4>
+              <div class="input-group">
+                <input type="number" id="withdrawAmount-cm" placeholder="Quantidade de CHIPS" min="1" step="1" />
+                <button id="withdrawBtn" onclick="withdrawFromSelectedTable()" class="btn-secondary">Sacar</button>
+              </div>
+              <div class="quick-actions">
+                <button onclick="setWithdrawAmount(1000)" class="btn-sm">1K</button>
+                <button onclick="setWithdrawAmount(5000)" class="btn-sm">5K</button>
+                <button onclick="setWithdrawAmount(10000)" class="btn-sm">10K</button>
+                <button onclick="withdrawAllFromTable()" class="btn-sm">Tudo</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="buy-sell-section">
+            <h4>💵 Comprar ou Vender Fichas</h4>
+            <div class="tabs">
+              <button id="buyTabBtn" class="tab-button active" onclick="openTab(event, 'buyTab')">Comprar CHIPS</button>
+              <button id="sellTabBtn" class="tab-button" onclick="openTab(event, 'sellTab')">Vender CHIPS</button>
+            </div>
+            <div id="buyTab" class="subtab-content active">
+              <div class="form-group">
+                <label for="buyUsdtAmount-cm">Quantidade de USDT:</label>
+                <input type="number" id="buyUsdtAmount-cm" placeholder="USDT para gastar" min="1" step="1" />
+                <button id="buyChipsBtn" onclick="buyChipsWithUSDT_UI()" class="btn-primary">Comprar CHIPS</button>
+              </div>
+              <div class="preview-info">
+                <small>Você receberá: <span id="chipsPreview">0</span> CHIPS</small>
+              </div>
+            </div>
+            <div id="sellTab" class="subtab-content">
+              <div class="form-group">
+                <label for="sellChipsAmount-cm">Quantidade de CHIPS:</label>
+                <input type="number" id="sellChipsAmount-cm" placeholder="CHIPS para vender" min="1" step="1" />
+                <button id="sellChipsBtn" onclick="sellChipsForUSDT_UI()" class="btn-secondary">Vender CHIPS</button>
+              </div>
+              <div class="preview-info">
+                <small>Você receberá: <span id="usdtPreview">0</span> USDT</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button id="refreshBalancesBtn" onclick="refreshAllBalances()" class="btn-secondary">🔄 Atualizar</button>
+          </div>
+          <div id="chipsStatus" style="margin-top: 12px;"></div>
+        </section>
+      </main>
+
+      <!-- Coluna direita vazia por enquanto -->
+      <aside class="rail-right"></aside>
+    </div>
+
+    <!-- Modais -->
+    <div id="createTableModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <h3>🎴 Criar Nova Mesa de Poker</h3>
+        <p><strong>Custo:</strong> 100 USDT | <strong>Requisito:</strong> ZOD ou Bilhete LotteryCore</p>
+        <div class="form-group">
+          <label>Nome da Mesa:</label>
+          <input type="text" id="tableName" placeholder="ex: minhamesa.zod" maxlength="20" />
+          <small>Deve terminar com '.zod'</small>
+        </div>
+        <div class="form-group">
+          <label>Taxa do Criador (%):</label>
+          <input type="number" id="tableFee" value="5" min="0" max="5" step="0.1" />
+          <small>0-5% (0 = usa padrão 5%)</small>
+        </div>
+        <div class="form-group">
+          <label>Número de Assentos:</label>
+          <input type="number" id="tableSeats" value="6" min="2" max="10" />
+        </div>
+        <div class="form-group">
+          <label><input type="checkbox" id="tablePublic" /> Mesa Pública (visível para todos)</label>
+        </div>
+        <div class="modal-actions">
+          <button onclick="createTable()" class="btn-primary">🎲 Criar Mesa (100 USDT)</button>
+          <button onclick="hideCreateTableModal()" class="btn-secondary">Cancelar</button>
+        </div>
+        <div id="createTableStatus" style="margin-top: 10px;"></div>
+      </div>
+    </div>
+
+    <div id="importTableModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <h3>📥 Importar Mesa Manualmente</h3>
+        <div class="form-group">
+          <label>Nome da Mesa:</label>
+          <input type="text" id="importTableName" placeholder="ex: minhamesa.zod" />
+        </div>
+        <div class="form-group">
+          <label>Endereço do Contrato:</label>
+          <input type="text" id="importTableAddress" placeholder="0x..." style="font-family: monospace;" />
+        </div>
+        <div class="form-group">
+          <label>Número de Assentos:</label>
+          <input type="number" id="importTableSeats" value="6" min="2" max="10" />
+        </div>
+        <div class="modal-actions">
+          <button onclick="importTableManually()" class="btn-primary">Importar Mesa</button>
+          <button onclick="hideImportTableModal()" class="btn-secondary">Cancelar</button>
+        </div>
+        <div id="importTableStatus" style="margin-top: 10px;"></div>
+      </div>
+    </div>
+
+    <div id="tablesManagerModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <h3>⚙️ Gerenciador de Mesas Conhecidas</h3>
+        <div class="manager-stats">
+          <p>Total de mesas registradas: <strong id="knownTablesCount">0</strong></p>
+          <button onclick="scanAllTableEvents()" class="btn-secondary">🕵️ Buscar Eventos Passados</button>
+        </div>
+        <div class="tables-list">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr><th>Nome</th><th>Endereço</th><th>Criador</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="knownTablesList"></tbody>
+          </table>
+        </div>
+        <div class="modal-actions">
+          <button onclick="hideTablesManager()" class="btn-secondary">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="blockchainModal" class="blockchain-modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>💎 Gerenciar Fichas On-Chain</h2>
+          <button class="close-btn" onclick="hideBlockchainModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="balance-section">
+            <h3>Seus Saldos</h3>
+            <div id="modalBalances" class="balance-grid">
+              <div class="balance-card">
+                <span class="balance-label">Carteira</span>
+                <span class="balance-value" id="walletChipsBalance">0.00 CHIPS</span>
+              </div>
+              <div class="balance-card">
+                <span class="balance-label">Na Mesa</span>
+                <span class="balance-value" id="tableChipsBalance">0.00 CHIPS</span>
+              </div>
+            </div>
+            <button class="refresh-btn" onclick="refreshBalances()">🔄 Atualizar</button>
+          </div>
+          <div class="action-section">
+            <h3>Depositar Fichas na Mesa</h3>
+            <p class="help-text">Transfira CHIPS da sua carteira para jogar</p>
+            <input type="number" id="depositAmount" placeholder="Quantidade de CHIPS" min="1" step="0.01" />
+            <button class="action-btn deposit-btn" onclick="handleDeposit()">Depositar</button>
+          </div>
+          <div class="action-section">
+            <h3>Sacar Fichas da Mesa</h3>
+            <p class="help-text">Retire CHIPS da mesa para sua carteira</p>
+            <input type="number" id="withdrawAmount" placeholder="Quantidade de CHIPS" min="1" step="0.01" />
+            <button class="action-btn withdraw-btn" onclick="handleWithdraw()">Sacar</button>
+            <button class="action-btn withdraw-all-btn" onclick="handleWithdrawAll()">Sacar Tudo</button>
+          </div>
+          <div class="action-section cashier-section">
+            <h3>🏦 Cashier</h3>
+            <div class="cashier-action">
+              <h4>Comprar CHIPS com USDT</h4>
+              <p class="help-text">Taxa: 20% liquidez + 10% treasury</p>
+              <input type="number" id="buyUsdtAmount" placeholder="Quantidade de USDT" min="1" step="0.01" />
+              <button class="action-btn buy-btn" onclick="handleBuyChips()">Comprar CHIPS</button>
+            </div>
+            <div class="cashier-action">
+              <h4>Resgatar CHIPS por USDT</h4>
+              <p class="help-text">Você recebe 70% do valor em USDT</p>
+              <input type="number" id="redeemChipAmount" placeholder="Quantidade de CHIPS" min="1" step="0.01" />
+              <button class="action-btn redeem-btn" onclick="handleRedeemChips()">Resgatar USDT</button>
+            </div>
+          </div>
+          <div class="contracts-section">
+            <h3>📜 Contratos</h3>
+            <div class="contract-links">
+              <div class="contract-item"><span>CasinoChips:</span> <a href="#" id="chipsLink" target="_blank" rel="noopener">Ver no Explorer</a></div>
+              <div class="contract-item"><span>TableFactory:</span> <a href="#" id="factoryLink" target="_blank" rel="noopener">Ver no Explorer</a></div>
+              <div class="contract-item"><span>PokerTable (atual):</span> <a href="#" id="tableLink" target="_blank" rel="noopener">—</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- ÁREA DO JOGO -->
+    <div class="game-container" id="gameContainer">
+      <!-- Toolbar compacto acima da mesa -->
+    <div class="table-toolbar" role="toolbar" aria-label="Ações da Mesa">
+      <div class="tb-left">
+        <span class="tb-status" id="phase">Aguardando</span>
+        <span class="tb-sub" id="actionText">Conectando…</span>
+      </div>
+
+      <div class="tb-center">
+        <button class="tb-btn tb-accent" onclick="showBlockchainModal()">💎 Blockchain</button>
+      </div>
+
+      <div class="tb-right">
+        <button class="tb-btn tb-danger" onclick="leaveGame()">Sair da Mesa</button>
+      </div>
+    </div>
+
+
+      <!-- Viewport criado direto no HTML (ajuda no retrato) -->
+      <div class="game-viewport">
+        <div class="holdem">
+          <div class="felt">
+            <div class="pot-area"><div class="pot" id="pot">Pote: $0</div></div>
+            <div class="board" id="board"></div>
+            <div class="dealer-btn" id="dealer">D</div>
+            <button id="toggleChat" class="toggle-chat" onclick="toggleChat()" aria-expanded="true" title="Mostrar/ocultar chat">chat</button>
+            <div class="my-hole-dock" id="myHoleDock"></div>
+          </div>
+          <div class="seats" id="seats"></div>
+        </div>
+      </div>
+
+      <div class="chat-container" id="chatPanel">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-container">
+          <input type="text" class="chat-input" id="chatInput" placeholder="Digite sua mensagem..." maxlength="200" />
+          <button class="chat-send-btn" onclick="sendChatMessage()">Enviar</button>
+        </div>
+      </div>
+
+      <div class="action-dock">
+        <div class="controls" id="controls"></div>
+      </div>
+
+      <div id="settleBar" class="settle-bar" style="display: none; margin-top: 10px;">
+        <button id="settleBtn" class="btn btn-primary">Finalizar mão (on-chain)</button>
+        <span id="settleHint" style="margin-left: 8px;"></span>
+      </div>
+      <div id="statusMsg" style="margin-top: 8px;"></div>
+    </div>
+
+    <!-- Dica de orientação (quando não dá pra travar) -->
+    <div id="rotateHint" class="rotate-hint" role="status" aria-live="polite">
+      <div class="box">
+        <h3>Melhor com o aparelho deitado</h3>
+        <p>Se possível, gire o aparelho para o modo paisagem para visualizar a mesa confortavelmente.</p>
+      </div>
+    </div>
+
+    <script src="conn_api.js"></script>
+    <script src="casinochips.js"></script>
+    <script src="table_factory.js"></script>
+
+    <!-- Scripts principais -->
+    <script src="poker_web3.js" onerror="showMessage('Erro: Não foi possível carregar poker_web3.js.', true)"></script>
+    
+    <script src="poker.js"></script>
+    <script src="stars-bg.js"></script>
+
+    <script>
+      // URL do servidor
+      function getServerUrl() {
+        const typedValue = 'https://zodplay.space';
+        return typedValue || (window.location.origin.replace(/:\d+$/, '') + ':3001');
+      }
+
+      // Menu lateral
+      function toggleSideMenu() {
+        const el = document.getElementById('sideMenu');
+        el.classList.toggle('open');
+      }
+      function closeSideMenu() {
+        const el = document.getElementById('sideMenu');
+        el.classList.remove('open');
+      }
+
+      // Tabs de topo
+      function showTab(tabId) {
+        document.querySelectorAll('.top-tab').forEach(tab => tab.classList.remove('active'));
+        const target = document.getElementById(tabId);
+        if (target) {
+          target.classList.add('active');
+          const firstSub = target.querySelector('.subtab-content');
+          if (firstSub && !target.querySelector('.subtab-content.active')) firstSub.classList.add('active');
+          const firstBtn = target.querySelector('.tabs .tab-button');
+          if (firstBtn && !target.querySelector('.tabs .tab-button.active')) firstBtn.classList.add('active');
+
+          if (tabId === 'chipsTab') {
+            try { window.ensureSelectedTableFromContext && window.ensureSelectedTableFromContext(); } catch (e) {}
+            try { window.loadTableSelector && window.loadTableSelector(); } catch (e) {}
+            try { window.updateTableSelection && window.updateTableSelection(); } catch (e) {}
+            try { window.refreshWalletBalance && window.refreshWalletBalance(); } catch (e) {}
+            try { if (window.selectedTableAddress && window.refreshTableBalance) { window.refreshTableBalance(window.selectedTableAddress); } } catch (e) {}
+          } else if (tabId === 'lobbyTab') {
+            try { window.refreshLobby && window.refreshLobby(); } catch (e) {}
+          }
+        }
+      }
+
+      // Sub-abas (Comprar/Vender)
+      function openTab(evt, subId) {
+        const container = evt.currentTarget.closest('.buy-sell-section');
+        if (!container) return;
+        container.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        container.querySelectorAll('.subtab-content').forEach(s => s.classList.remove('active'));
+        evt.currentTarget.classList.add('active');
+        const target = document.getElementById(subId);
+        if (target) target.classList.add('active');
+      }
+
+      // Modal Blockchain
+      function showBlockchainModal() { document.getElementById('blockchainModal').style.display = 'flex'; }
+      function hideBlockchainModal() { document.getElementById('blockchainModal').style.display = 'none'; }
+
+      async function handleDeposit() {
+        const v = document.getElementById('depositAmount').value;
+        if (!v || v <= 0) return showMessage('Digite uma quantidade válida', true);
+        await depositChips(v);
+      }
+      async function handleWithdraw() {
+        const v = document.getElementById('withdrawAmount').value;
+        if (!v || v <= 0) return showMessage('Digite uma quantidade válida', true);
+        await withdrawChips(v);
+      }
+      async function handleWithdrawAll() {
+        if (confirm('Deseja sacar todas as fichas da mesa?')) await withdrawAllChips();
+      }
+      async function handleBuyChips() {
+        const v = document.getElementById('buyUsdtAmount').value;
+        if (!v || v <= 0) return showMessage('Digite uma quantidade válida', true);
+        await buyChipsWithUSDT(v);
+      }
+      async function handleRedeemChips() {
+        const v = document.getElementById('redeemChipAmount').value;
+        if (!v || v <= 0) return showMessage('Digite uma quantidade válida', true);
+        await redeemChipsForUSDT(v);
+      }
+
+      // Atualiza links de contratos
+      async function updateContractLinks() {
+        try {
+          const response = await fetch(`${getServerUrl()}/api/blockchain/status`);
+          const statusData = await response.json();
+          if (statusData.enabled && statusData.contracts) {
+            const explorerPrefix = 'https://testnet.bscscan.com/address/';
+            if (statusData.contracts.casinoChips) document.getElementById('chipsLink').href = explorerPrefix + statusData.contracts.casinoChips;
+            if (statusData.contracts.factory) document.getElementById('factoryLink').href = explorerPrefix + statusData.contracts.factory;
+          }
+        } catch (error) { console.error('Erro ao carregar contratos:', error); }
+      }
+
+      // Inicialização
+      window.addEventListener('load', () => {
+        updateContractLinks();
+        showTab('lobbyTab');
+      });
+
+      // Botão "Conectar" do topo: some quando conectado
+      (function () {
+        function syncWalletUI() {
+          var btn = document.getElementById('walletConnectTop');
+          if (!btn) return;
+          var connected = !!(window.isWalletConnected && window.userAddress);
+          btn.style.display = connected ? 'none' : 'inline-flex';
+        }
+        window.addEventListener('load', syncWalletUI);
+        setInterval(syncWalletUI, 1500);
+        if (typeof window.connectWallet === 'function') {
+          var _cw = window.connectWallet;
+          window.connectWallet = async function () { try { var r = await _cw.apply(this, arguments); } finally { syncWalletUI(); } return r; };
+        }
+        if (typeof window.disconnectWallet === 'function') {
+          var _dw = window.disconnectWallet;
+          window.disconnectWallet = async function () { try { var r = await _dw.apply(this, arguments); } finally { syncWalletUI(); } return r; };
+        }
+        window.addEventListener('wallet:connected', syncWalletUI);
+        window.addEventListener('wallet:disconnected', syncWalletUI);
+      })();
+    </script>
+
+    <!-- ===== Trust Wallet / Portrait fallback (escala automática) ===== -->
+    <script>
+      function isTrustWallet() {
+        const ua = (navigator.userAgent || '').toLowerCase();
+        return ua.includes('trust') || ua.includes('twbrowser');
+      }
+
+      function ensureGameViewport() {
+        const hold = document.querySelector('.game-container .holdem');
+        if (!hold) return null;
+        if (hold.parentElement && hold.parentElement.classList.contains('game-viewport')) {
+          return hold.parentElement;
+        }
+        const wrap = document.createElement('div');
+        wrap.className = 'game-viewport';
+        hold.parentElement.insertBefore(wrap, hold);
+        wrap.appendChild(hold);
+        return wrap;
+      }
+
+      function applyPortraitScale() {
+        const gv = ensureGameViewport();
+        if (!gv) return;
+        const felt = gv.querySelector('.felt');
+        if (!felt) return;
+
+        const vw = gv.clientWidth;
+        const vh = gv.clientHeight;
+
+        const baseW = Math.min(1000, vw); // mesa tem max-width:1000px
+        const baseH = parseInt(getComputedStyle(felt).height, 10) || 520;
+
+        const scaleW = vw / baseW;
+        const scaleH = vh / (baseH + 120); // folga p/ HUD/chat
+        const scale = Math.max(0.72, Math.min(scaleW, scaleH));
+        gv.style.setProperty('--table-scale', scale.toString());
+      }
+
+      function updatePortraitModeClass() {
+        const inGame = document.body.classList.contains('in-game');
+        const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+        if (inGame && (isPortrait || isTrustWallet())) {
+          document.body.classList.add('portrait-game');
+          applyPortraitScale();
+        } else {
+          document.body.classList.remove('portrait-game');
+          const gv = document.querySelector('.game-viewport');
+          if (gv) gv.style.removeProperty('--table-scale');
+        }
+      }
+
+      // Observa entrada/saída do jogo
+      const gameEl = document.getElementById('gameContainer');
+      if (gameEl) {
+        const obs = new MutationObserver(() => {
+          const on = gameEl.classList.contains('active');
+          document.body.classList.toggle('in-game', on);
+          updatePortraitModeClass();
+        });
+        obs.observe(gameEl, { attributes: true, attributeFilter: ['class'] });
+        // estado inicial
+        document.body.classList.toggle('in-game', gameEl.classList.contains('active'));
+      }
+
+      // Recalcula em resize/rotação
+      window.addEventListener('resize', () => {
+        updatePortraitModeClass();
+        if (document.body.classList.contains('portrait-game')) applyPortraitScale();
+      });
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          updatePortraitModeClass();
+          if (document.body.classList.contains('portrait-game')) applyPortraitScale();
+        }, 250);
+      });
+
+      // Integra com enter/exit do seu fluxo (se existirem)
+      (function wireGameMode() {
+        const _enter = window.enterGameMode;
+        window.enterGameMode = async function() {
+          try { if (_enter) await _enter(); } catch(e) {}
+          updatePortraitModeClass();
+        };
+        const _exit = window.exitGameMode;
+        window.exitGameMode = async function() {
+          try { if (_exit) await _exit(); } catch(e) {}
+          document.body.classList.remove('portrait-game');
+          const gv = document.querySelector('.game-viewport');
+          if (gv) gv.style.removeProperty('--table-scale');
+          if (typeof showTab === 'function') showTab('lobbyTab');
+        };
+      })();
+
+      document.addEventListener('DOMContentLoaded', updatePortraitModeClass);
+      (function initJoinPrefs(){
+        try{
+          const nameEl  = document.getElementById('playerName');
+          const buyinEl = document.getElementById('buyin');
+          const saved   = JSON.parse(localStorage.getItem('zodpoker_userprefs')||'{}');
+          if (nameEl && saved.name)  nameEl.value  = saved.name;
+          if (buyinEl && saved.buyin) buyinEl.value = saved.buyin;
+          // Salvar sempre que mudar
+          function persist(){ 
+            localStorage.setItem('zodpoker_userprefs', JSON.stringify({
+              name:  nameEl?.value?.trim() || '',
+              buyin: parseInt(buyinEl?.value||'',10)||''
+            }));
+          }
+          nameEl?.addEventListener('change', persist);
+          buyinEl?.addEventListener('change', persist);
+          buyinEl?.addEventListener('input',  persist);
+        }catch(e){}
+      })();
+    </script>
+
+  </body>
+</html>

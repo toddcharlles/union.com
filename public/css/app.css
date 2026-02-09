@@ -1,0 +1,20 @@
+
+:root{color-scheme:dark light}
+body{font-family:system-ui,Segoe UI,Roboto,Ubuntu,sans-serif;margin:0;padding:0;background:#0b1020;color:#fff}
+.wrap{max-width:960px;margin:20px auto;padding:0 16px}
+h1{font-size:24px;margin:12px 0 20px}
+.row{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+.muted{opacity:.75}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:1000}
+.modal .box{background:#0f172a;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.35);padding:14px 16px;max-width:min(92vw,760px);width:100%}
+.modal header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.modal .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:10px}
+.table-card{background:#111827;padding:12px;border-radius:12px;display:flex;flex-direction:column;gap:8px}
+.table-header{display:flex;justify-content:space-between;align-items:center}
+.table-badge{padding:2px 8px;border-radius:8px;font-size:12px;background:#1f2937}
+.table-badge.on-chain{background:#064e3b}
+.table-badge.off-chain{background:#334155}
+.join-btn,.btn-secondary,button{padding:8px 12px;border:none;border-radius:10px;background:#2563eb;color:#fff;cursor:pointer}
+.btn-secondary{background:#374151}
+.box button[data-close], .box button[data-close="lobbyModal"]{background:#1f2937}
+input{background:#0b1220;border:1px solid #1f2937;color:#fff;border-radius:8px;padding:8px}

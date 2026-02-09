@@ -1,0 +1,16 @@
+{
+  "name": "zod-chat-server",
+  "version": "1.0.0",
+  "description": "Global chat server for ZOD Mining DApp",
+  "main": "chat-server.js",
+  "scripts": {
+    "start": "node chat-server.js",
+    "dev": "node chat-server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "ethers": "^5.7.2",
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  }
+}
