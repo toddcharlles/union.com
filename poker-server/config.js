@@ -1,7 +1,7 @@
-// config.js — Configuracoes e constantes do poker server
+// config.js — Poker server configuration and constants
 import { ethers } from "ethers";
 
-// Admin wallets — podem criar/gerenciar mesas off-chain
+// Admin wallets — can create/manage off-chain tables
 export const ADMIN_WALLETS = new Set([
   (process.env.ADMIN_WALLET || '0xeb1c187a7f6cd92e86032abe2808419d78ceca38').toLowerCase(),
 ]);
@@ -63,7 +63,7 @@ export const FACTORY_ABI = [
   "event TableCreated(string indexed tableIdText,address indexed table,address indexed creator,address chips,address operator,uint16 feeBpsUsed,bool isPublic,uint16 maxSeats,uint16 saleFeeBps)"
 ];
 
-// Mapeamento de naipes para poker-evaluator
+// Suit mapping for poker-evaluator
 export const SUIT_MAP = {
   '\u2660': 's',
   '\u2665': 'h',
@@ -82,9 +82,9 @@ export const TOURNAMENT_CONFIG = {
   ]
 };
 
-export const INACTIVITY_MS = 3 * 60 * 1000; // 3 minutos
+export const INACTIVITY_MS = 3 * 60 * 1000; // 3 minutes
 
-// TABLE_CONFIG e criado apos init da blockchain, exportado via createTableConfig
+// TABLE_CONFIG is created after blockchain init, exported via createTableConfig
 export function createTableConfig(blockchainEnabled) {
   return {
     defaultSeats: 10,
