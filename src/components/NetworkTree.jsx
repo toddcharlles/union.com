@@ -375,9 +375,9 @@ const NetworkTree = ({ contracts, account, isCorrectNetwork }) => {
             </div>
           ) : (
             <div className="bg-gray-50 rounded-lg p-4 text-center">
-              <p className="text-gray-600">Nenhum dado de rede ainda</p>
+              <p className="text-gray-600">No network data yet</p>
               <p className="text-sm text-gray-500 mt-1">
-                Seus mineradores aparecerao aqui por nivel
+                Your miners will appear here by level
               </p>
             </div>
           )}
@@ -388,7 +388,7 @@ const NetworkTree = ({ contracts, account, isCorrectNetwork }) => {
       {viewMode === 'tree' && (
         <div>
           <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3">
-            ⬇️ Seus Mineradores Diretos ({directReferrals.length})
+            ⬇️ Your Direct Miners ({directReferrals.length})
           </h3>
 
           {directReferrals.length > 0 ? (
@@ -397,9 +397,9 @@ const NetworkTree = ({ contracts, account, isCorrectNetwork }) => {
             </div>
           ) : (
             <div className="bg-gray-50 rounded-lg p-4 text-center">
-              <p className="text-gray-600">Nenhum minerador direto ainda</p>
+              <p className="text-gray-600">No direct miners yet</p>
               <p className="text-sm text-gray-500 mt-1">
-                Compartilhe seu link para construir sua rede de mineradores
+                Share your link to build your miner network
               </p>
             </div>
           )}
