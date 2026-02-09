@@ -1031,6 +1031,8 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   margin-bottom: 0.5rem;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .seat-cards-me .pcard-sm {
@@ -1216,6 +1218,8 @@ html, body {
 .poker-controls-area {
   padding: 0.5rem 0;
   text-align: center;
+  position: relative;
+  z-index: 100;
 }
 
 .controls-waiting {
