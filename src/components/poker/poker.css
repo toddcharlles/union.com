@@ -1399,23 +1399,27 @@
 }
 
 /* ================================================
-   CHAT PANEL - Slide-up overlay
+   CHAT PANEL - Fixed overlay (never breaks layout)
    ================================================ */
 
 .poker-chat-panel {
   position: fixed;
   bottom: 0;
   right: 0;
-  width: min(22rem, 100vw);
-  background: linear-gradient(180deg, rgba(15,23,42,0.97) 0%, rgba(10,15,30,0.99) 100%);
+  width: 22rem;
+  max-width: 100vw;
+  max-height: 50vh;
+  background: rgba(10, 15, 30, 0.98);
   border: 1px solid rgba(255,255,255,0.1);
   border-bottom: none;
   border-radius: 1rem 1rem 0 0;
   overflow: hidden;
-  z-index: 50;
+  z-index: 200;
   animation: chatSlideUp 0.25s ease;
-  box-shadow: -4px -4px 20px rgba(0,0,0,0.3);
+  box-shadow: -4px -4px 20px rgba(0,0,0,0.5);
   backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
 }
 @keyframes chatSlideUp {
   from { opacity: 0; transform: translateY(2rem); }
@@ -1431,25 +1435,28 @@
   font-size: 0.8rem;
   font-weight: 700;
   color: rgba(255,255,255,0.7);
+  flex-shrink: 0;
 }
 
 .chat-close-btn {
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.6);
   cursor: pointer;
-  font-size: 0.85rem;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.35rem;
   transition: all 0.15s;
+  font-weight: 700;
 }
 .chat-close-btn:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.15);
   color: #fff;
 }
 
 .poker-chat-messages {
-  height: 12rem;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 0.625rem 0.875rem;
   scrollbar-width: thin;
@@ -1486,10 +1493,12 @@
   gap: 0;
   padding: 0.5rem 0.75rem;
   border-top: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
 }
 
 .chat-input-field {
   flex: 1;
+  min-width: 0;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.12);
   border-right: none;
@@ -1514,8 +1523,11 @@
   padding: 0.5rem 0.75rem;
   color: #fff;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
   transition: background 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .chat-send-btn:hover {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
@@ -1835,6 +1847,45 @@
   .poker-lobby-header { flex-direction: column; align-items: flex-start; }
   .poker-lobby-setup { grid-template-columns: 1fr; }
 
+  /* Page nav compact */
+  .poker-page {
+    padding-bottom: 0.5rem;
+  }
+  .poker-page-nav {
+    padding: 0.4rem 0.5rem;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+  .poker-page-nav .poker-btn {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.6rem;
+  }
+  .poker-mode-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* Game top bar compact */
+  .poker-game {
+    padding: 0 0.25rem;
+    min-height: auto;
+  }
+  .poker-game-topbar {
+    padding: 0.35rem 0.5rem;
+    gap: 0.3rem;
+    margin-bottom: 0.25rem;
+  }
+  .topbar-btn {
+    font-size: 0.68rem;
+    padding: 0.3rem 0.5rem;
+  }
+  .phase-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+  }
+  .pot-value { font-size: 0.8rem; }
+  .pot-label { font-size: 0.55rem; }
+
   /* === MOBILE: Vertical table (taller than wide) === */
   .poker-table-wrapper {
     min-height: 28rem;
@@ -1902,7 +1953,17 @@
   .felt-pot { padding: 0.15rem 0.5rem 0.15rem 0.35rem; }
   .felt-pot-value { font-size: 0.65rem; }
 
-  .poker-chat-panel { width: 100vw; }
+  /* Chat: full-screen overlay on mobile */
+  .poker-chat-panel {
+    width: 100vw;
+    max-height: 60vh;
+    left: 0;
+    right: 0;
+    border-radius: 1rem 1rem 0 0;
+  }
+  .poker-chat-messages {
+    min-height: 8rem;
+  }
 
   /* Controls tighter */
   .poker-controls { padding: 0.5rem 0.75rem; }
