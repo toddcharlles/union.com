@@ -2128,7 +2128,7 @@ app.post("/api/seat/:tableId/:wallet", async (req, res) => {
 });
 
 /** ================= START ================= */
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3012;
 server.listen(PORT, () => {
   console.log(`\n🎰 Poker Server Híbrido em http://localhost:${PORT}`);
   console.log(`⛓️ Blockchain: ${blockchainEnabled ? '✅ Habilitada' : '❌ Desabilitada'}`);
