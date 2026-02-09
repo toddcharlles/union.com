@@ -1037,6 +1037,14 @@ html, body {
   width: 2.2rem;
   height: 3.1rem;
   box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+}
+
+/* Player's cards grow when it's their turn */
+.seat-active.seat-me .seat-cards-me .pcard-sm {
+  width: 3rem;
+  height: 4.2rem;
+  box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
 }
 
 /* ---- Winner Badge ---- */
@@ -1189,17 +1197,17 @@ html, body {
 
 /* Community cards - larger */
 .pcard-community {
-  width: 3.25rem;
-  height: 4.5rem;
+  width: 4rem;
+  height: 5.5rem;
   box-shadow:
     0 4px 12px rgba(0,0,0,0.3),
     0 1px 3px rgba(0,0,0,0.15);
 }
-.pcard-community .pcard-rank { font-size: 0.9rem; }
-.pcard-community .pcard-suit-mini { font-size: 0.7rem; }
-.pcard-community .pcard-center-suit { font-size: 1.8rem; }
-.pcard-community .pcard-corner-tl { top: 0.25rem; left: 0.3rem; }
-.pcard-community .pcard-corner-br { bottom: 0.25rem; right: 0.3rem; }
+.pcard-community .pcard-rank { font-size: 1.1rem; }
+.pcard-community .pcard-suit-mini { font-size: 0.85rem; }
+.pcard-community .pcard-center-suit { font-size: 2.2rem; }
+.pcard-community .pcard-corner-tl { top: 0.3rem; left: 0.35rem; }
+.pcard-community .pcard-corner-br { bottom: 0.3rem; right: 0.35rem; }
 
 /* ================================================
    CONTROLS - Professional Action Panel
@@ -1879,12 +1887,12 @@ html, body {
   .poker-seats-container { inset: -2rem; }
 
   .pcard-community {
-    width: 2.5rem;
-    height: 3.5rem;
+    width: 3rem;
+    height: 4.2rem;
   }
-  .pcard-community .pcard-rank { font-size: 0.75rem; }
-  .pcard-community .pcard-suit-mini { font-size: 0.55rem; }
-  .pcard-community .pcard-center-suit { font-size: 1.3rem; }
+  .pcard-community .pcard-rank { font-size: 0.9rem; }
+  .pcard-community .pcard-suit-mini { font-size: 0.65rem; }
+  .pcard-community .pcard-center-suit { font-size: 1.6rem; }
 
   .community-cards { gap: 0.35rem; }
 }
@@ -1983,8 +1991,8 @@ html, body {
   }
 
   .pcard-community {
-    width: 2rem;
-    height: 2.8rem;
+    width: 2.5rem;
+    height: 3.5rem;
   }
   .pcard-community .pcard-rank { font-size: 0.65rem; }
   .pcard-community .pcard-suit-mini { font-size: 0.5rem; }
@@ -2085,10 +2093,10 @@ html, body {
   .seat-stack { font-size: 0.45rem; }
 
   .pcard-community {
-    width: 1.75rem;
-    height: 2.45rem;
+    width: 2.2rem;
+    height: 3rem;
   }
-  .pcard-community .pcard-center-suit { font-size: 0.9rem; }
+  .pcard-community .pcard-center-suit { font-size: 1.1rem; }
 
   .pcard-sm { width: 1.2rem; height: 1.7rem; }
   .pcard-sm .pcard-rank { font-size: 0.4rem; }
@@ -2098,6 +2106,13 @@ html, body {
   .seat-cards-me .pcard-sm {
     width: 1.6rem;
     height: 2.2rem;
+    transition: all 0.3s ease;
+  }
+
+  .seat-active.seat-me .seat-cards-me .pcard-sm {
+    width: 2.2rem;
+    height: 3rem;
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
   }
 
   .felt-logo { font-size: 1.5rem; }
