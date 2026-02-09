@@ -1919,7 +1919,8 @@ html, body {
   /* === MOBILE: Vertical table (taller than wide) === */
   .poker-table-wrapper {
     min-height: 28rem;
-    padding: 0.25rem 0;
+    padding: 1.5rem 0 0.5rem;
+    align-items: flex-start;
   }
 
   .poker-table-area {
