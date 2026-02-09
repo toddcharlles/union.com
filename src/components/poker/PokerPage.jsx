@@ -80,7 +80,7 @@ const PokerPage = ({ account, onBack }) => {
       {/* Top navigation */}
       <div className="poker-page-nav">
         <button className="poker-btn poker-btn-ghost" onClick={handleBack}>
-          &#8592; Voltar ao DApp
+          &#8592; Back to DApp
         </button>
 
         <div className="poker-page-nav-right">
@@ -94,7 +94,7 @@ const PokerPage = ({ account, onBack }) => {
             <button
               className="poker-btn poker-btn-ghost poker-btn-sm"
               onClick={() => setShowAdmin(true)}
-              title="Painel Admin"
+              title="Admin Panel"
             >
               ⚙ Admin
             </button>

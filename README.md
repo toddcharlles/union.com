@@ -1,68 +1,65 @@
-<<<<<<< HEAD
-# finalzpm
-=======
 # ZPM Mining System - Frontend
 
-Interface web para interação com o sistema de mineração ZPM na Binance Smart Chain.
+Web interface for interacting with the ZPM mining system on Binance Smart Chain.
 
-## 🚀 Funcionalidades
+## 🚀 Features
 
 ### 💰 USDT Faucet
-- Obter USDT de teste (até 40,000 USDT por endereço)
-- Visualizar saldo atual
-- Verificar quanto ainda pode ser obtido
+- Get test USDT (up to 40,000 USDT per address)
+- View current balance
+- Check how much can still be obtained
 
 ### 🪙 Token Info (ZOD)
-- Visualizar saldo de ZOD
-- Ver época atual e taxa de transação
-- Acompanhar porcentagem minerada
-- Status do floor price (piso)
-- Informações de supply total e cap
+- View ZOD balance
+- See current epoch and transaction fee
+- Track mined percentage
+- Floor price status
+- Total supply and cap information
 
 ### 🔄 Pool Swap
-- Vender ZOD por USDT
-- Ver preço do floor
-- Calcular cotação antes de vender
-- Visualizar taxas de venda (15%)
-- Aprovar e executar swaps
+- Sell ZOD for USDT
+- View floor price
+- Calculate quote before selling
+- View sale fees (15%)
+- Approve and execute swaps
 
 ### ⛏️ Mining Power System
-- Comprar poder de mineração com USDT
-- Sistema de referências multi-nível (6 níveis)
-- Claim de tokens minerados
-- Compra de licença (30 dias)
-- Visualizar estatísticas de mineração:
-  - Taxa de mineração (ZOD/segundo)
-  - Saldo minerável
-  - Tokens pendentes para claim
-  - Total minerado
-- Gestão de referências:
-  - Link de referência pessoal
-  - Visualizar referências diretas
-  - Bônus pendentes
+- Buy mining power with USDT
+- Multi-level referral system (6 levels)
+- Claim mined tokens
+- Purchase license (30 days)
+- View mining statistics:
+  - Mining rate (ZOD/second)
+  - Minable balance
+  - Pending tokens to claim
+  - Total mined
+- Referral management:
+  - Personal referral link
+  - View direct referrals
+  - Pending bonuses
 
-## 📋 Pré-requisitos
+## 📋 Prerequisites
 
-- Node.js (v16 ou superior)
-- MetaMask instalado no navegador
-- Conexão com Binance Smart Chain (BSC)
+- Node.js (v16 or higher)
+- MetaMask installed in browser
+- Binance Smart Chain (BSC) connection
 
-## 🛠️ Instalação
+## 🛠️ Installation
 
 ```bash
-# Instalar dependências
+# Install dependencies
 npm install
 
-# Iniciar servidor de desenvolvimento
+# Start development server
 npm run dev
 
-# Build para produção
+# Build for production
 npm run build
 ```
 
-## 🔧 Configuração
+## 🔧 Configuration
 
-Os endereços dos contratos estão configurados em `src/config.js`:
+Contract addresses are configured in `src/config.js`:
 
 ```javascript
 export const CONTRACTS = {
@@ -73,134 +70,133 @@ export const CONTRACTS = {
 };
 ```
 
-### Configuração de Rede
+### Network Configuration
 
-A aplicação está configurada para a Binance Smart Chain (BSC):
+The application is configured for Binance Smart Chain (BSC):
 - Chain ID: 56
 - RPC URL: https://bsc-dataseed1.binance.org
-- Explorador: https://bscscan.com
+- Explorer: https://bscscan.com
 
-Para alterar a rede, edite `CHAIN_CONFIG` em `src/config.js`.
+To change the network, edit `CHAIN_CONFIG` in `src/config.js`.
 
-## 📱 Como Usar
+## 📱 How to Use
 
-### 1. Conectar Carteira
+### 1. Connect Wallet
 
-1. Clique em "Connect MetaMask"
-2. Aprove a conexão no MetaMask
-3. Verifique se está na rede BSC (a aplicação pedirá para trocar se necessário)
+1. Click "Connect MetaMask"
+2. Approve connection in MetaMask
+3. Check if you're on BSC network (application will ask to switch if necessary)
 
-### 2. Obter USDT de Teste
+### 2. Get Test USDT
 
-1. Na seção "USDT Faucet"
-2. Digite a quantidade desejada (máx: 40,000)
-3. Clique em "Mint USDT"
-4. Confirme a transação no MetaMask
+1. In the "USDT Faucet" section
+2. Enter desired amount (max: 40,000)
+3. Click "Mint USDT"
+4. Confirm transaction in MetaMask
 
-### 3. Comprar Poder de Mineração
+### 3. Buy Mining Power
 
-1. Na seção "Mining Power System"
-2. Digite a quantidade de USDT para investir
-3. (Opcional) Insira o endereço do referenciador
-4. Clique em "Approve USDT" (primeira vez)
-5. Clique em "Buy Power"
-6. Confirme a transação
+1. In the "Mining Power System" section
+2. Enter USDT amount to invest
+3. (Optional) Enter referrer address
+4. Click "Approve USDT" (first time)
+5. Click "Buy Power"
+6. Confirm transaction
 
-### 4. Claim de Tokens
+### 4. Claim Tokens
 
-1. Aguarde acumular tokens (visualize em "Pending Claim")
-2. Clique em "Claim ZOD"
-3. Confirme a transação
-4. Tokens ZOD serão enviados para sua carteira
+1. Wait to accumulate tokens (view in "Pending Claim")
+2. Click "Claim ZOD"
+3. Confirm transaction
+4. ZOD tokens will be sent to your wallet
 
-### 5. Vender ZOD por USDT
+### 5. Sell ZOD for USDT
 
-1. Na seção "Pool Swap"
-2. Digite a quantidade de ZOD
-3. Visualize a cotação (valor bruto, taxa, valor líquido)
-4. Clique em "Approve ZOD" (primeira vez)
-5. Clique em "Sell ZOD"
-6. Confirme a transação
+1. In the "Pool Swap" section
+2. Enter ZOD amount
+3. View quote (gross value, fee, net value)
+4. Click "Approve ZOD" (first time)
+5. Click "Sell ZOD"
+6. Confirm transaction
 
-### 6. Sistema de Referências
+### 6. Referral System
 
-- Copie seu link de referência na seção "Referral System"
-- Compartilhe com amigos
-- Ganhe bônus quando eles comprarem poder de mineração
-- Acompanhe suas referências diretas (ativas/total)
+- Copy your referral link in the "Referral System" section
+- Share with friends
+- Earn bonuses when they buy mining power
+- Track your direct referrals (active/total)
 
-## 🏗️ Estrutura do Projeto
+## 🏗️ Project Structure
 
 ```
 frontend/
 ├── src/
-│   ├── components/          # Componentes React
+│   ├── components/          # React components
 │   │   ├── WalletConnect.jsx
 │   │   ├── USDTFaucet.jsx
 │   │   ├── TokenInfo.jsx
 │   │   ├── PoolSwap.jsx
 │   │   └── MiningPower.jsx
 │   ├── hooks/              # Custom hooks
-│   │   ├── useWallet.js    # Hook de conexão de carteira
-│   │   └── useContracts.js # Hook de contratos
-│   ├── config.js           # Configurações e ABIs
-│   ├── App.jsx             # Componente principal
-│   └── index.css           # Estilos globais (Tailwind)
+│   │   ├── useWallet.js    # Wallet connection hook
+│   │   └── useContracts.js # Contracts hook
+│   ├── config.js           # Configuration and ABIs
+│   ├── App.jsx             # Main component
+│   └── index.css           # Global styles (Tailwind)
 ├── package.json
 └── vite.config.js
 ```
 
-## 🎨 Tecnologias Utilizadas
+## 🎨 Technologies Used
 
-- **React** - Biblioteca UI
-- **Vite** - Build tool e dev server
-- **Ethers.js v5** - Interação com blockchain
-- **Tailwind CSS** - Estilização
+- **React** - UI Library
+- **Vite** - Build tool and dev server
+- **Ethers.js v5** - Blockchain interaction
+- **Tailwind CSS** - Styling
 - **MetaMask** - Wallet provider
 
-## 📊 Fluxo de Mineração
+## 📊 Mining Flow
 
-1. **Investimento**: Usuário compra poder de mineração com USDT
-2. **Distribuição**:
-   - 80% → Saldo minerável do usuário
-   - 10% → Boost de mineração para referenciadores (6 níveis)
-   - 10% → Liquidez imediata para o pool
-3. **Mineração**: Tokens são gerados automaticamente ao longo do tempo
-4. **Claim**: Usuário reivindica tokens acumulados
-5. **Liquidez**: 5% adicional vai para o pool no momento do claim
+1. **Investment**: User buys mining power with USDT
+2. **Distribution**:
+   - 80% → User's minable balance
+   - 10% → Mining boost for referrers (6 levels)
+   - 10% → Immediate liquidity to pool
+3. **Mining**: Tokens are automatically generated over time
+4. **Claim**: User claims accumulated tokens
+5. **Liquidity**: 5% additional goes to pool at claim time
 
-## 🔐 Segurança
+## 🔐 Security
 
-- Sempre verifique os endereços dos contratos antes de aprovar transações
-- Nunca compartilhe sua seed phrase ou chave privada
-- Use valores de teste pequenos primeiro para garantir que tudo funciona
-- Verifique as transações no BSCScan antes de confirmar
+- Always verify contract addresses before approving transactions
+- Never share your seed phrase or private key
+- Use small test values first to ensure everything works
+- Check transactions on BSCScan before confirming
 
 ## 🐛 Troubleshooting
 
-### MetaMask não conecta
-- Recarregue a página
-- Desconecte e reconecte a carteira
-- Limpe o cache do navegador
+### MetaMask won't connect
+- Reload the page
+- Disconnect and reconnect wallet
+- Clear browser cache
 
-### Transação falha
-- Verifique se tem saldo suficiente para gas
-- Verifique se aprovou os tokens antes de transferir
-- Aumente o gas limit se necessário
+### Transaction fails
+- Check if you have enough balance for gas
+- Verify you approved tokens before transferring
+- Increase gas limit if necessary
 
-### Preço não atualiza
-- A interface atualiza a cada 10-15 segundos automaticamente
-- Recarregue a página se necessário
+### Price doesn't update
+- Interface updates every 10-15 seconds automatically
+- Reload page if necessary
 
-## 📄 Licença
+## 📄 License
 
 MIT
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-Pull requests são bem-vindos! Para mudanças maiores, abra uma issue primeiro para discutir o que você gostaria de mudar.
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
 ---
 
-**Nota**: Este é um projeto de demonstração. Use por sua conta e risco.
->>>>>>> 996df9c (Initial commit)
+**Note**: This is a demonstration project. Use at your own risk.

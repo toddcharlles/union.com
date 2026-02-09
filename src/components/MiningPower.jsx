@@ -64,7 +64,7 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
       setReferrerValidation({
         isChecking: false,
         isRegistered: false,
-        error: 'Endereço zero não é permitido'
+        error: 'Zero address is not allowed'
       });
       return;
     }
@@ -88,7 +88,7 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
         setReferrerValidation({
           isChecking: false,
           isRegistered: false,
-          error: 'Este endereço não está cadastrado na rede'
+          error: 'This address is not registered in the network'
         });
       }
     } catch (error) {
@@ -96,7 +96,7 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
       setReferrerValidation({
         isChecking: false,
         isRegistered: false,
-        error: 'Erro ao verificar endereço'
+        error: 'Error verifying address'
       });
     }
   };
@@ -325,30 +325,30 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
     }
   };
 
-  // Função unificada de compra: Aprovação + Compra em um único fluxo
+  // Unified purchase function: Approval + Purchase in a single flow
   const handlePurchase = async () => {
     if (!contracts || !buyAmount || Number(buyAmount) <= 0) return;
 
-    // Se não está registrado, DEVE ter um referrer válido cadastrado na rede
+    // If not registered, MUST have a valid referrer registered in the network
     if (!userStats.isRegistered) {
       if (!referrerAddress) {
-        alert('Você precisa informar o endereço do seu upline (minerador que te indicou) para se cadastrar na rede.');
+        alert('You need to provide your upline address (miner who referred you) to register in the network.');
         return;
       }
       if (!ethers.utils.isAddress(referrerAddress)) {
-        alert('O endereço do upline informado é inválido.');
+        alert('The upline address provided is invalid.');
         return;
       }
       if (referrerAddress === ethers.constants.AddressZero) {
-        alert('Endereço zero não é permitido. Informe o endereço de um minerador cadastrado.');
+        alert('Zero address is not allowed. Provide the address of a registered miner.');
         return;
       }
       if (referrerValidation.isChecking) {
-        alert('Aguarde a verificação do endereço do upline...');
+        alert('Please wait for upline address verification...');
         return;
       }
       if (!referrerValidation.isRegistered) {
-        alert('O endereço informado não está cadastrado na rede. Você precisa de um upline válido para se registrar.');
+        alert('The address provided is not registered in the network. You need a valid upline to register.');
         return;
       }
     }
@@ -361,28 +361,28 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
     setTxHash('');
 
     try {
-      // Passo 1: Aprovação (se necessário)
+      // Step 1: Approval (if necessary)
       if (needsApprove) {
         setPurchaseStep('approving');
-        console.log('Aprovando USDT...');
+        console.log('Approving USDT...');
 
         const approveTx = await contracts.usdt.approve(CONTRACTS.ECONOMY, amountWei);
         setTxHash(approveTx.hash);
         await approveTx.wait();
 
         setPurchaseStep('approved');
-        console.log('USDT aprovado! Iniciando compra...');
+        console.log('USDT approved! Starting purchase...');
 
-        // Pequena pausa para UX
+        // Small pause for UX
         await new Promise(resolve => setTimeout(resolve, 500));
       }
 
-      // Passo 2: Compra
+      // Step 2: Purchase
       setPurchaseStep('buying');
 
       const referrer = userStats.isRegistered ? ethers.constants.AddressZero : referrerAddress;
 
-      console.log('Comprando poder de mineração:', {
+      console.log('Buying mining power:', {
         amount: buyAmount,
         referrer,
         isRegistered: userStats.isRegistered
@@ -399,22 +399,22 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
 
       window.dispatchEvent(new CustomEvent('balancesUpdated'));
 
-      alert('Poder de mineração comprado com sucesso!');
+      alert('Mining power purchased successfully!');
 
     } catch (error) {
-      console.error('Erro na compra:', error);
+      console.error('Purchase error:', error);
 
-      // Mensagem de erro mais amigável
-      let errorMsg = 'Transação falhou';
+      // More user-friendly error message
+      let errorMsg = 'Transaction failed';
       if (error.message?.includes('user rejected')) {
-        errorMsg = 'Transação cancelada pelo usuário';
+        errorMsg = 'Transaction cancelled by user';
       } else if (error.message?.includes('insufficient funds')) {
-        errorMsg = 'Saldo insuficiente para a transação';
+        errorMsg = 'Insufficient balance for transaction';
       } else if (error.message) {
         errorMsg = error.message;
       }
 
-      alert(`Erro: ${errorMsg}`);
+      alert(`Error: ${errorMsg}`);
     } finally {
       setIsLoading(false);
       setPurchaseStep('idle');
@@ -434,16 +434,16 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
 
       await tx.wait();
 
-      // Parar o timer antes de recarregar
+      // Stop timer before reloading
       stopDisplayTimer();
 
-      // Recarregar dados (isso vai reiniciar o contador com o valor correto do servidor)
+      // Reload data (this will restart the counter with the correct value from server)
       await loadData();
 
-      // Disparar evento para atualizar saldos na barra de navegação
+      // Trigger event to update balances in navigation bar
       window.dispatchEvent(new CustomEvent('balancesUpdated'));
 
-      alert(`Tokens ZOD reivindicados com sucesso!`);
+      alert(`ZOD tokens claimed successfully!`);
     } catch (error) {
       console.error('Error claiming:', error);
       alert(`Error: ${error.message || 'Claim failed'}`);
@@ -467,7 +467,7 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
 
       await loadData();
 
-      // Disparar evento para atualizar saldos na barra de navegação
+      // Trigger event to update balances in navigation bar
       window.dispatchEvent(new CustomEvent('balancesUpdated'));
 
       alert('License purchased successfully!');
@@ -485,7 +485,7 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
 
   const licenseNeedsApproval = Number(allowance) < 25;
 
-  // Link de indicacao com &capture para mostrar pagina de captura
+  // Referral link with &capture to show capture page
   const referralLink = window.location.origin + '/zpm/?ref=' + account + '&capture';
 
   return (
@@ -516,7 +516,7 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
       {/* User Stats */}
       <div className="stats-grid">
         <div className="bg-slate-50 rounded-md border border-slate-200 p-3 sm:p-4">
-          <p className="stat-label">Taxa de Mineracao</p>
+          <p className="stat-label">Mining Rate</p>
           <p className="stat-value text-slate-900">{userState.powerRatePerMin || '0.00000000'}</p>
           <p className="text-xs text-gray-500 mt-0.5">ZOD/min</p>
         </div>
@@ -528,22 +528,22 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
         </div>
 
         <div className="bg-blue-50 rounded-md border border-blue-200 p-3 sm:p-4">
-          <p className="stat-label">Reclamação pendente ⏱️</p>
+          <p className="stat-label">Pending Claim ⏱️</p>
           <p className="stat-value text-blue-900">
             {Number(livePendingMint || 0).toFixed(6)}
           </p>
-          <p className="text-xs text-gray-500 mb-3">ZOD Ao Vivo</p>
+          <p className="text-xs text-gray-500 mb-3">Live ZOD</p>
           <button
             onClick={handleClaim}
             disabled={isClaiming || Number(livePendingMint) <= 0}
             className="btn-primary w-full text-sm py-1.5"
           >
-            {isClaiming ? 'Reclamando...' : 'Reivindicar ZOD'}
+            {isClaiming ? 'Claiming...' : 'Claim ZOD'}
           </button>
         </div>
 
         <div className="bg-slate-50 rounded-md border border-slate-200 p-3 sm:p-4">
-          <p className="stat-label">Total extraído</p>
+          <p className="stat-label">Total Mined</p>
           <p className="stat-value text-slate-900">{userState.totalMined}</p>
           <p className="text-xs text-gray-500 mt-0.5">ZOD</p>
         </div>
@@ -551,39 +551,39 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
 
       {/* Buy Mining Power */}
       <div className="bg-white rounded-md border border-gray-200 p-3 sm:p-4 mb-3 sm:mb-4 shadow-sm">
-        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-3 border-b border-gray-200 pb-2">Compre Poder de Mineração</h3>
+        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-3 border-b border-gray-200 pb-2">Buy Mining Power</h3>
 
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Quanto deseja investir? (Mínimo: 5 USDT)
+              How much do you want to invest? (Minimum: 5 USDT)
             </label>
             <input
               type="number"
               value={buyAmount}
               onChange={(e) => setBuyAmount(e.target.value)}
-              placeholder="Digite o valor em USDT (ex: 10, 50, 100)"
+              placeholder="Enter amount in USDT (e.g.: 10, 50, 100)"
               className="input-field text-lg"
               disabled={isLoading}
               min="5"
               step="1"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Duração da mineração: {durationDays} dias | Mínimo: 5 USDT
+              Mining duration: {durationDays} days | Minimum: 5 USDT
             </p>
             {!userStats.isRegistered && (
               <p className="text-xs text-blue-600 mt-1">
-                ℹ️ Sua primeira compra irá cadastrá-lo na rede. Informe o endereço do seu upline abaixo.
+                ℹ️ Your first purchase will register you in the network. Provide your upline address below.
               </p>
             )}
             {referrerAddress && referrerValidation.isRegistered === true && (
               <p className="text-xs text-green-600 mt-1">
-                ✓ Upline detectado e validado: {referrerAddress.slice(0, 6)}...{referrerAddress.slice(-4)}
+                ✓ Upline detected and validated: {referrerAddress.slice(0, 6)}...{referrerAddress.slice(-4)}
               </p>
             )}
             {referrerAddress && referrerValidation.isRegistered === false && (
               <p className="text-xs text-red-600 mt-1">
-                ✗ Upline detectado mas não está cadastrado: {referrerAddress.slice(0, 6)}...{referrerAddress.slice(-4)}
+                ✗ Upline detected but not registered: {referrerAddress.slice(0, 6)}...{referrerAddress.slice(-4)}
               </p>
             )}
           </div>
@@ -592,13 +592,13 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
           {!userStats.isRegistered && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Endereço do Upline (Obrigatório)
+                Upline Address (Required)
               </label>
               <input
                 type="text"
                 value={referrerAddress}
                 onChange={(e) => setReferrerAddress(e.target.value)}
-                placeholder="0x... (endereço do minerador que te indicou)"
+                placeholder="0x... (address of the miner who referred you)"
                 className={`input-field ${
                   referrerAddress && referrerValidation.isRegistered === true ? 'border-green-500' :
                   referrerAddress && referrerValidation.isRegistered === false ? 'border-red-500' : ''
@@ -606,61 +606,61 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
                 disabled={isLoading || isApproving}
               />
               <p className="text-xs text-gray-500 mt-1">
-                Para se cadastrar na rede, você precisa informar o endereço de um minerador já cadastrado.
+                To register in the network, you need to provide the address of an already registered miner.
               </p>
 
               {/* Validation Status */}
               {referrerAddress && referrerValidation.isChecking && (
                 <p className="text-xs text-blue-600 mt-1">
-                  ⏳ Verificando se o endereço está cadastrado na rede...
+                  ⏳ Checking if address is registered in the network...
                 </p>
               )}
               {referrerAddress && !referrerValidation.isChecking && referrerValidation.isRegistered === true && (
                 <p className="text-xs text-green-600 mt-1">
-                  ✅ Upline válido e cadastrado na rede!
+                  ✅ Valid upline registered in the network!
                 </p>
               )}
               {referrerAddress && !referrerValidation.isChecking && referrerValidation.isRegistered === false && (
                 <p className="text-xs text-red-600 mt-1">
-                  ❌ {referrerValidation.error || 'Este endereço não está cadastrado na rede'}
+                  ❌ {referrerValidation.error || 'This address is not registered in the network'}
                 </p>
               )}
               {referrerAddress && !ethers.utils.isAddress(referrerAddress) && (
                 <p className="text-xs text-red-600 mt-1">
-                  ⚠️ Formato de endereço inválido
+                  ⚠️ Invalid address format
                 </p>
               )}
               {!referrerAddress && (
                 <p className="text-xs text-orange-600 mt-1">
-                  ⚠️ Você precisa de um upline para se registrar na rede
+                  ⚠️ You need an upline to register in the network
                 </p>
               )}
             </div>
           )}
 
-          {/* Botão Unificado de Compra */}
+          {/* Unified Purchase Button */}
           <div className="space-y-3">
-            {/* Indicador de Progresso */}
+            {/* Progress Indicator */}
             {isLoading && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <div className="flex items-center gap-3">
                   <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
                   <div>
                     <p className="text-sm font-semibold text-blue-800">
-                      {purchaseStep === 'approving' && '1/2 - Aprovando USDT...'}
-                      {purchaseStep === 'approved' && '1/2 - USDT Aprovado!'}
-                      {purchaseStep === 'buying' && '2/2 - Comprando poder de mineração...'}
-                      {purchaseStep === 'done' && 'Concluído!'}
+                      {purchaseStep === 'approving' && '1/2 - Approving USDT...'}
+                      {purchaseStep === 'approved' && '1/2 - USDT Approved!'}
+                      {purchaseStep === 'buying' && '2/2 - Buying mining power...'}
+                      {purchaseStep === 'done' && 'Completed!'}
                     </p>
                     <p className="text-xs text-blue-600">
-                      {purchaseStep === 'approving' && 'Confirme a aprovação na sua carteira'}
-                      {purchaseStep === 'approved' && 'Iniciando compra automaticamente...'}
-                      {purchaseStep === 'buying' && 'Confirme a compra na sua carteira'}
-                      {purchaseStep === 'done' && 'Transação concluída com sucesso!'}
+                      {purchaseStep === 'approving' && 'Confirm approval in your wallet'}
+                      {purchaseStep === 'approved' && 'Starting purchase automatically...'}
+                      {purchaseStep === 'buying' && 'Confirm purchase in your wallet'}
+                      {purchaseStep === 'done' && 'Transaction completed successfully!'}
                     </p>
                   </div>
                 </div>
-                {/* Barra de progresso */}
+                {/* Progress bar */}
                 <div className="mt-2 h-2 bg-blue-100 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-blue-600 transition-all duration-500"
@@ -688,17 +688,17 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-                  Processando...
+                  Processing...
                 </span>
               ) : (
-                `Comprar ${buyAmount || '0'} USDT em Poder de Mineração`
+                `Buy ${buyAmount || '0'} USDT in Mining Power`
               )}
             </button>
 
-            {/* Aviso de valor mínimo */}
+            {/* Minimum value warning */}
             {buyAmount && Number(buyAmount) < 5 && (
               <p className="text-xs text-red-600 text-center">
-                O valor mínimo de compra é 5 USDT
+                The minimum purchase value is 5 USDT
               </p>
             )}
           </div>
@@ -708,66 +708,66 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
       {/* License Section */}
       <div className="mb-3 sm:mb-4">
 {(() => {
-          // Verificar se usuário tem poder de mineração (investiu algo)
+          // Check if user has mining power (invested something)
           const hasMiningPower = Number(userStats.totalInvested) > 0;
 
-          // Se não tem poder de mineração, mostrar mensagem de bloqueio
+          // If no mining power, show blocking message
           if (!hasMiningPower) {
             return (
               <div className="bg-gray-100 rounded-lg p-3 sm:p-4 border border-gray-300">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-3 h-3 rounded-full bg-gray-400"></div>
-                  <h3 className="text-base sm:text-lg font-bold text-gray-500">Licença (30 dias)</h3>
+                  <h3 className="text-base sm:text-lg font-bold text-gray-500">License (30 days)</h3>
                 </div>
                 <div className="flex items-center gap-2 text-gray-500">
                   <span className="text-xl">🔒</span>
                   <p className="text-sm">
-                    Primeiro compre poder de mineração para desbloquear a licença.
+                    First buy mining power to unlock the license.
                   </p>
                 </div>
               </div>
             );
           }
 
-          // Calcular se está próximo de expirar
+          // Calculate if expiring soon
           const now = Math.floor(Date.now() / 1000);
           const expiryTime = Number(userState.licenseExpiry);
           const timeUntilExpiry = expiryTime - now;
-          const oneDayInSeconds = 86400; // 24 horas
+          const oneDayInSeconds = 86400; // 24 hours
           const isExpiringSoon = timeUntilExpiry <= oneDayInSeconds && timeUntilExpiry > 0;
           const needsRenewal = !userStats.hasLicense || isExpiringSoon;
 
-          // Definir cor de fundo baseado no status
+          // Define background color based on status
           const bgColor = userStats.hasLicense ? 'bg-green-50' : 'bg-red-50';
           const indicatorColor = userStats.hasLicense ? 'bg-green-500' : 'bg-red-500';
 
           return (
             <div className={`${bgColor} rounded-lg p-3 sm:p-4`}>
               <div className="flex items-center gap-2 mb-2">
-                {/* Indicador visual (bola colorida) */}
+                {/* Visual indicator (colored ball) */}
                 <div className={`w-3 h-3 rounded-full ${indicatorColor} animate-pulse`}></div>
-                <h3 className="text-base sm:text-lg font-bold text-gray-800">Licença (30 dias)</h3>
+                <h3 className="text-base sm:text-lg font-bold text-gray-800">License (30 days)</h3>
               </div>
 
               {userStats.hasLicense && (
                 <p className="text-xs text-gray-600 mb-3">
-                  Expira em: {formatDateTime(userState.licenseExpiry)}
+                  Expires on: {formatDateTime(userState.licenseExpiry)}
                 </p>
               )}
 
               {!userStats.hasLicense && (
                 <p className="text-xs text-red-600 font-semibold mb-3">
-                  Você não possui licença ativa. A licença é necessária para receber bônus da sua rede.
+                  You don't have an active license. The license is necessary to receive bonuses from your network.
                 </p>
               )}
 
               {isExpiringSoon && (
                 <p className="text-xs text-orange-600 font-semibold mb-2">
-                  ⚠️ Expira em menos de 24 horas!
+                  ⚠️ Expires in less than 24 hours!
                 </p>
               )}
 
-              {/* Botão só aparece se não tem licença OU está expirando em 1 dia */}
+              {/* Button only appears if no license OR expiring in 1 day */}
               {needsRenewal && (
                 licenseNeedsApproval ? (
                   <button
@@ -777,9 +777,9 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
                         const tx = await contracts.usdt.approve(CONTRACTS.ECONOMY, parseEther('25'));
                         await tx.wait();
                         await loadData();
-                        alert('USDT aprovado!');
+                        alert('USDT approved!');
                       } catch (error) {
-                        alert(`Erro: ${error.message}`);
+                        alert(`Error: ${error.message}`);
                       } finally {
                         setIsApproving(false);
                       }
@@ -787,7 +787,7 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
                     disabled={isApproving}
                     className="btn-secondary w-full"
                   >
-                    {isApproving ? 'Aprovando...' : 'Aprovar 25 USDT'}
+                    {isApproving ? 'Approving...' : 'Approve 25 USDT'}
                   </button>
                 ) : (
                   <button
@@ -795,7 +795,7 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
                     disabled={isBuyingLicense}
                     className="btn-primary w-full"
                   >
-                    {isBuyingLicense ? 'Comprando...' : 'Comprar Licença (25 USDT)'}
+                    {isBuyingLicense ? 'Buying...' : 'Buy License (25 USDT)'}
                   </button>
                 )
               )}
@@ -806,12 +806,12 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
 
       {/* Referral Info */}
       <div className="bg-white rounded-md border border-gray-200 p-3 sm:p-4 mb-3 sm:mb-4 shadow-sm">
-        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-3 border-b border-gray-200 pb-2">Rede de Mineradores</h3>
+        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-3 border-b border-gray-200 pb-2">Miners Network</h3>
 
         <div className="space-y-3">
           <div>
             <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2">
-              Seu link de minerador:
+              Your miner link:
             </label>
             <div className="flex flex-col sm:flex-row gap-2">
               <input
@@ -823,28 +823,28 @@ const MiningPower = ({ contracts, account, isCorrectNetwork }) => {
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(referralLink);
-                  alert('Link copiado!');
+                  alert('Link copied!');
                 }}
                 className="btn-primary px-3 sm:px-4 py-2 text-xs sm:text-sm whitespace-nowrap"
               >
-                Copiar Link
+                Copy Link
               </button>
             </div>
           </div>
 
-          {/* Botão para copiar link da página de captura */}
+          {/* Button to copy capture page link */}
           <div className="pt-2 border-t border-gray-100">
             <p className="text-xs text-gray-500 mb-2">
-              Use a página de captura para divulgar o sistema de forma mais persuasiva:
+              Use the capture page to promote the system in a more persuasive way:
             </p>
             <button
               onClick={() => {
                 navigator.clipboard.writeText(referralLink);
-                alert('Link da página de captura copiado!');
+                alert('Capture page link copied!');
               }}
               className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-all"
             >
-              📋 Copiar Link da Pagina de Captura
+              📋 Copy Capture Page Link
             </button>
           </div>
         </div>

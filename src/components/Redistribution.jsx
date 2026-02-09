@@ -152,10 +152,10 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
       setTxHash(tx.hash);
       await tx.wait();
       await loadData();
-      alert('Registrado com sucesso para a redistribuicao!');
+      alert('Successfully registered for redistribution!');
     } catch (error) {
       console.error('Error registering:', error);
-      alert(`Erro: ${error.message || 'Falha no registro'}`);
+      alert(`Error: ${error.message || 'Registration failed'}`);
     } finally {
       setIsRegistering(false);
     }
@@ -173,10 +173,10 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
       await tx.wait();
       await loadData();
       window.dispatchEvent(new CustomEvent('balancesUpdated'));
-      alert('Redistribuicao recebida com sucesso!');
+      alert('Redistribution received successfully!');
     } catch (error) {
       console.error('Error claiming redistribution:', error);
-      alert(`Erro: ${error.message || 'Falha ao receber'}`);
+      alert(`Error: ${error.message || 'Claim failed'}`);
     } finally {
       setIsClaiming(false);
     }
@@ -189,22 +189,22 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
   const getPhaseDisplay = () => {
     if (redistributionStatus.isRegistrationWindowOpen) {
       return {
-        phase: 'Registro',
+        phase: 'Registration',
         color: 'bg-blue-500',
-        text: `Janela de registro aberta! Fecha em ${redistributionStatus.daysUntilRegistrationCloses} dias`
+        text: `Registration window open! Closes in ${redistributionStatus.daysUntilRegistrationCloses} days`
       };
     }
     if (redistributionStatus.isClaimWindowOpen) {
       return {
         phase: 'Claim',
         color: 'bg-green-500',
-        text: `Janela de claim aberta! Fecha em ${redistributionStatus.daysUntilClaimCloses} dias`
+        text: `Claim window open! Closes in ${redistributionStatus.daysUntilClaimCloses} days`
       };
     }
     return {
-      phase: 'Acumulacao',
+      phase: 'Accumulation',
       color: 'bg-yellow-500',
-      text: `Pool acumulando. Proximo periodo em ${redistributionStatus.daysUntilPeriodEnd} dias`
+      text: `Pool accumulating. Next period in ${redistributionStatus.daysUntilPeriodEnd} days`
     };
   };
 
@@ -212,11 +212,11 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
 
   return (
     <div className="card mb-4 sm:mb-6">
-      <h2 className="card-title">Redistribuicao Mensal</h2>
+      <h2 className="card-title">Monthly Redistribution</h2>
 
       {isLoading && !redistributionStatus.currentPeriodId && (
         <div className="bg-blue-50 border border-blue-300 rounded-lg p-3 mb-4">
-          <p className="text-sm text-blue-700">Carregando dados de redistribuicao...</p>
+          <p className="text-sm text-blue-700">Loading redistribution data...</p>
         </div>
       )}
 
@@ -224,7 +224,7 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
         <div className="bg-red-50 border border-red-300 rounded-lg p-3 mb-4">
           <p className="text-sm text-red-700">{loadError}</p>
           <button onClick={loadData} className="text-xs bg-red-200 hover:bg-red-300 px-3 py-1 rounded mt-2">
-            Tentar novamente
+            Try again
           </button>
         </div>
       )}
@@ -234,12 +234,12 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
         <div className={`${phaseInfo.color} text-white rounded-lg p-4`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm opacity-80">Periodo #{redistributionStatus.currentPeriodId}</p>
+              <p className="text-sm opacity-80">Period #{redistributionStatus.currentPeriodId}</p>
               <p className="text-lg font-bold">{phaseInfo.phase}</p>
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold">{redistributionStatus.currentPoolBalanceZOD}</p>
-              <p className="text-sm opacity-80">ZOD no Pool</p>
+              <p className="text-sm opacity-80">ZOD in Pool</p>
             </div>
           </div>
           <p className="text-sm mt-2 opacity-90">{phaseInfo.text}</p>
@@ -249,7 +249,7 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
       {/* Progress Dashboard */}
       <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg p-4 mb-4 border border-indigo-200">
         <h3 className="text-base font-bold text-indigo-900 mb-4 flex items-center gap-2">
-          <span>📊</span> Dashboard de Progresso para Elegibilidade
+          <span>📊</span> Progress Dashboard for Eligibility
         </h3>
 
         <div className="space-y-4">
@@ -257,14 +257,14 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm text-gray-700 flex items-center gap-1">
-                <span>🕐</span> Tempo na Rede
+                <span>🕐</span> Time in Network
               </span>
               <span className="text-sm font-bold text-indigo-700">
                 {progressData.tenureDays >= 1
-                  ? `${progressData.tenureDays}/${progressData.tenureRequired} dias`
+                  ? `${progressData.tenureDays}/${progressData.tenureRequired} days`
                   : (progressData.tenureDaysFraction || 0) > 0
-                    ? `${((progressData.tenureDaysFraction || 0) * 24).toFixed(1)} horas / ${progressData.tenureRequired} dias`
-                    : `0/${progressData.tenureRequired} dias`}
+                    ? `${((progressData.tenureDaysFraction || 0) * 24).toFixed(1)} hours / ${progressData.tenureRequired} days`
+                    : `0/${progressData.tenureRequired} days`}
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -277,12 +277,12 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
             </div>
             <p className="text-xs text-gray-600 mt-1">
               {(progressData.tenureDaysFraction || 0) >= progressData.tenureRequired
-                ? '✅ Requisito de tempo atendido!'
+                ? '✅ Time requirement met!'
                 : progressData.tenureDays >= 1
-                  ? `Faltam ${progressData.tenureRequired - progressData.tenureDays} dias para completar o requisito`
+                  ? `${progressData.tenureRequired - progressData.tenureDays} days remaining to complete requirement`
                   : (progressData.tenureDaysFraction || 0) > 0
-                    ? `Faltam ${(progressData.tenureRequired - (progressData.tenureDaysFraction || 0)).toFixed(1)} dias para completar o requisito`
-                    : 'Registre-se para comecar a contar o tempo'}
+                    ? `${(progressData.tenureRequired - (progressData.tenureDaysFraction || 0)).toFixed(1)} days remaining to complete requirement`
+                    : 'Register to start counting time'}
             </p>
           </div>
 
@@ -290,7 +290,7 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm text-gray-700 flex items-center gap-1">
-                <span>⛏️</span> Poder de Mineracao (USD)
+                <span>⛏️</span> Mining Power (USD)
               </span>
               <span className="text-sm font-bold text-purple-700">
                 ${progressData.avgMiningPowerUSD.toFixed(2)}/${progressData.minMiningPowerUSD} USD
@@ -306,8 +306,8 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
             </div>
             <p className="text-xs text-gray-600 mt-1">
               {progressData.avgMiningPowerUSD >= progressData.minMiningPowerUSD
-                ? '✅ Requisito de poder de mineracao atendido!'
-                : `Faltam $${(progressData.minMiningPowerUSD - progressData.avgMiningPowerUSD).toFixed(2)} em poder de mineracao`}
+                ? '✅ Mining power requirement met!'
+                : `$${(progressData.minMiningPowerUSD - progressData.avgMiningPowerUSD).toFixed(2)} in mining power remaining`}
             </p>
           </div>
 
@@ -315,10 +315,10 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm text-gray-700 flex items-center gap-1">
-                <span>👥</span> Mineradores Ativos
+                <span>👥</span> Active Miners
               </span>
               <span className="text-sm font-bold text-blue-700">
-                {progressData.activeReferrals}/{progressData.minActiveReferrals} ativos
+                {progressData.activeReferrals}/{progressData.minActiveReferrals} active
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -331,18 +331,18 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
             </div>
             <p className="text-xs text-gray-600 mt-1">
               {progressData.activeReferrals >= progressData.minActiveReferrals
-                ? '✅ Requisito de mineradores atendido!'
-                : `Faltam ${progressData.minActiveReferrals - progressData.activeReferrals} minerador(es) ativo(s)`}
+                ? '✅ Miners requirement met!'
+                : `${progressData.minActiveReferrals - progressData.activeReferrals} active miner(s) remaining`}
             </p>
           </div>
 
           {/* License Status */}
           <div className="flex items-center justify-between bg-white bg-opacity-50 rounded-lg p-3">
             <span className="text-sm text-gray-700 flex items-center gap-1">
-              <span>📜</span> Licenca Valida
+              <span>📜</span> Valid License
             </span>
             <span className={`text-sm font-bold ${progressData.hasLicense ? 'text-green-600' : 'text-red-600'}`}>
-              {progressData.hasLicense ? '✅ Ativa' : '❌ Inativa'}
+              {progressData.hasLicense ? '✅ Active' : '❌ Inactive'}
             </span>
           </div>
 
@@ -354,19 +354,19 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
           }`}>
             {userStatus.isCurrentlyEligible ? (
               <p className="text-sm text-green-800 font-semibold">
-                🎉 Parabens! Voce esta elegivel para a redistribuicao!
+                🎉 Congratulations! You are eligible for redistribution!
               </p>
             ) : (
               <p className="text-sm text-yellow-800">
                 {(progressData.tenureDaysFraction || 0) < progressData.tenureRequired
-                  ? `🎯 Continue ativo! Faltam ${Math.ceil(progressData.tenureRequired - (progressData.tenureDaysFraction || 0))} dias para completar o requisito de tempo.`
+                  ? `🎯 Stay active! ${Math.ceil(progressData.tenureRequired - (progressData.tenureDaysFraction || 0))} days remaining to complete time requirement.`
                   : progressData.avgMiningPowerUSD < progressData.minMiningPowerUSD
-                    ? `💪 Aumente seu poder de mineracao! Faltam $${(progressData.minMiningPowerUSD - progressData.avgMiningPowerUSD).toFixed(2)} em poder de mineracao.`
+                    ? `💪 Increase your mining power! $${(progressData.minMiningPowerUSD - progressData.avgMiningPowerUSD).toFixed(2)} in mining power remaining.`
                     : progressData.activeReferrals < progressData.minActiveReferrals
-                      ? `👥 Convide mais mineradores! Faltam ${progressData.minActiveReferrals - progressData.activeReferrals} minerador(es) ativo(s).`
+                      ? `👥 Invite more miners! ${progressData.minActiveReferrals - progressData.activeReferrals} active miner(s) remaining.`
                       : !progressData.hasLicense
-                        ? '📜 Adquira uma licenca para se tornar elegivel!'
-                        : '🔄 Verifique os requisitos acima para se tornar elegivel.'}
+                        ? '📜 Get a license to become eligible!'
+                        : '🔄 Check the requirements above to become eligible.'}
               </p>
             )}
           </div>
@@ -376,52 +376,52 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
       {/* Stats Grid */}
       <div className="stats-grid mb-4">
         <div className="bg-slate-50 rounded-md border border-slate-200 p-3">
-          <p className="stat-label">Usuarios Registrados</p>
+          <p className="stat-label">Registered Users</p>
           <p className="stat-value text-slate-900">{redistributionStatus.registeredUsersCount}</p>
         </div>
 
         <div className="bg-slate-50 rounded-md border border-slate-200 p-3">
-          <p className="stat-label">Seus Ganhos (Mes)</p>
+          <p className="stat-label">Your Earnings (Month)</p>
           <p className="stat-value text-slate-900">${userStatus.networkEarningsUSD}</p>
         </div>
 
         <div className="bg-slate-50 rounded-md border border-slate-200 p-3">
-          <p className="stat-label">Redistribuicao Recebida</p>
+          <p className="stat-label">Redistribution Received</p>
           <p className="stat-value text-slate-900">${userStatus.redistributionReceivedUSD}</p>
         </div>
 
         <div className="bg-slate-50 rounded-md border border-slate-200 p-3">
-          <p className="stat-label">Elegibilidade Restante</p>
+          <p className="stat-label">Remaining Eligibility</p>
           <p className="stat-value text-slate-900">${userStatus.remainingEligibilityUSD}</p>
         </div>
       </div>
 
       {/* User Status */}
       <div className="bg-white rounded-md border border-gray-200 p-4 mb-4 shadow-sm">
-        <h3 className="text-base font-bold text-gray-900 mb-3 border-b border-gray-200 pb-2">Seu Status</h3>
+        <h3 className="text-base font-bold text-gray-900 mb-3 border-b border-gray-200 pb-2">Your Status</h3>
 
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span>Elegivel para redistribuicao:</span>
+            <span>Eligible for redistribution:</span>
             <span className={userStatus.isCurrentlyEligible ? 'text-green-600 font-bold' : 'text-red-600'}>
-              {userStatus.isCurrentlyEligible ? 'Sim' : 'Nao'}
+              {userStatus.isCurrentlyEligible ? 'Yes' : 'No'}
             </span>
           </div>
           <div className="flex justify-between">
-            <span>Registrado neste periodo:</span>
+            <span>Registered this period:</span>
             <span className={userStatus.hasRegisteredThisPeriod ? 'text-green-600 font-bold' : 'text-yellow-600'}>
-              {userStatus.hasRegisteredThisPeriod ? 'Sim' : 'Nao'}
+              {userStatus.hasRegisteredThisPeriod ? 'Yes' : 'No'}
             </span>
           </div>
           <div className="flex justify-between">
-            <span>Ja recebeu neste periodo:</span>
+            <span>Already claimed this period:</span>
             <span className={userStatus.hasAlreadyClaimed ? 'text-green-600' : 'text-gray-600'}>
-              {userStatus.hasAlreadyClaimed ? 'Sim' : 'Nao'}
+              {userStatus.hasAlreadyClaimed ? 'Yes' : 'No'}
             </span>
           </div>
           {userStatus.hasRegisteredThisPeriod && (
             <div className="flex justify-between">
-              <span>Valor maximo elegivel:</span>
+              <span>Maximum eligible amount:</span>
               <span className="font-bold">${userStatus.maxEligibleAmountUSD}</span>
             </div>
           )}
@@ -430,15 +430,15 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
 
       {/* Eligibility Requirements */}
       <div className="bg-gray-50 rounded-md border border-gray-200 p-4 mb-4">
-        <h3 className="text-base font-bold text-gray-900 mb-3">Requisitos para Elegibilidade</h3>
+        <h3 className="text-base font-bold text-gray-900 mb-3">Eligibility Requirements</h3>
         <ul className="text-sm space-y-1 text-gray-700">
-          <li>- Ter 3+ mineradores diretos ATIVOS (com poder de mineracao)</li>
-          <li>- Ter licenca valida ate o fim da janela de claim</li>
-          <li>- Ter no minimo 50 USDT em poder de mineracao ativo</li>
-          <li>- Ganhos mensais + redistribuicao recebida menor que 200 USDT</li>
+          <li>- Have 3+ ACTIVE direct miners (with mining power)</li>
+          <li>- Have valid license until the end of claim window</li>
+          <li>- Have at least 50 USDT in active mining power</li>
+          <li>- Monthly earnings + redistribution received less than 200 USDT</li>
         </ul>
         {!canRegister.can && canRegister.reason && (
-          <p className="text-xs text-red-600 mt-2">Motivo atual: {canRegister.reason}</p>
+          <p className="text-xs text-red-600 mt-2">Current reason: {canRegister.reason}</p>
         )}
       </div>
 
@@ -450,7 +450,7 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
             disabled={isRegistering || !canRegister.can}
             className="btn-primary w-full"
           >
-            {isRegistering ? 'Registrando...' : canRegister.can ? 'Registrar para Redistribuicao' : `Nao elegivel: ${canRegister.reason}`}
+            {isRegistering ? 'Registering...' : canRegister.can ? 'Register for Redistribution' : `Not eligible: ${canRegister.reason}`}
           </button>
         )}
 
@@ -460,19 +460,19 @@ const Redistribution = ({ contracts, account, isCorrectNetwork }) => {
             disabled={isClaiming || !userStatus.canClaimNow}
             className="btn-primary w-full"
           >
-            {isClaiming ? 'Recebendo...' : 'Receber Redistribuicao'}
+            {isClaiming ? 'Claiming...' : 'Claim Redistribution'}
           </button>
         )}
 
         {userStatus.hasRegisteredThisPeriod && !redistributionStatus.isClaimWindowOpen && !userStatus.hasAlreadyClaimed && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
-            <p className="text-sm text-blue-700">Voce esta registrado! Aguarde a janela de claim abrir.</p>
+            <p className="text-sm text-blue-700">You are registered! Wait for the claim window to open.</p>
           </div>
         )}
 
         {userStatus.hasAlreadyClaimed && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
-            <p className="text-sm text-green-700">Voce ja recebeu sua parte neste periodo!</p>
+            <p className="text-sm text-green-700">You already received your share this period!</p>
           </div>
         )}
       </div>

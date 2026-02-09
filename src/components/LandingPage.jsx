@@ -47,14 +47,14 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-5xl font-bold text-white mb-4">
-            Minere ZOD. Ganhe Recompensas.
+            Mine ZOD. Earn Rewards.
           </h1>
           <p className="text-base sm:text-lg text-white text-opacity-80 max-w-2xl mx-auto mb-2">
-            O DApp de mining on-chain com ZOD na BNB Smart Chain!
+            The on-chain mining DApp with ZOD on BNB Smart Chain!
           </p>
           <p className="text-sm sm:text-base text-white text-opacity-60 max-w-2xl mx-auto mb-8">
-            Invista em poder de mineracao, construa sua rede de mineradores e receba redistribuicao mensal.
-            Tudo transparente e on-chain.
+            Invest in mining power, build your miner network and receive monthly redistribution.
+            Everything transparent and on-chain.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -63,7 +63,7 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
               disabled={isConnecting}
               className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-white font-bold py-3 px-10 rounded-xl text-lg shadow-lg shadow-orange-500/30 transition-all duration-200 transform hover:scale-105"
             >
-              {isConnecting ? 'Conectando...' : 'Conectar Carteira'}
+              {isConnecting ? 'Connecting...' : 'Connect Wallet'}
             </button>
             <button
               onClick={onOpenWhitepaper}
@@ -79,13 +79,13 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
           <div className="flex items-start gap-4">
             <div className="text-3xl">🛡️</div>
             <div>
-              <h3 className="text-lg font-bold text-green-800 mb-2">Protecao contra Grandes Quedas</h3>
+              <h3 className="text-lg font-bold text-green-800 mb-2">Protection against Large Drops</h3>
               <p className="text-sm text-green-700 mb-2">
-                Diferente de tokens como Bitcoin que ja caiu de $120.000 para menos de $70.000 USDT (-42%),
-                o ZOD possui um <strong>preco minimo garantido</strong> pelo pool de liquidez.
+                Unlike tokens like Bitcoin which already dropped from $120,000 to less than $70,000 USDT (-42%),
+                ZOD has a <strong>guaranteed minimum price</strong> backed by the liquidity pool.
               </p>
               <p className="text-sm text-green-600">
-                Voce sempre pode vender seus ZOD pelo preco floor - sem exposicao a quedas drasticas do mercado.
+                You can always sell your ZOD at the floor price - without exposure to drastic market drops.
               </p>
             </div>
           </div>
@@ -93,10 +93,10 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
 
         {/* Global Stats */}
         <div className="card mb-8">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 text-center">Dados do Protocolo</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-4 text-center">Protocol Data</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center border border-blue-200">
-              <p className="text-xs text-blue-600 font-semibold mb-1">Preco ZOD</p>
+              <p className="text-xs text-blue-600 font-semibold mb-1">ZOD Price</p>
               <p className="text-xl sm:text-2xl font-bold text-blue-800">
                 {statsLoaded ? `$${stats.floorPrice}` : '...'}
               </p>
@@ -104,7 +104,7 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
             </div>
 
             <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center border border-purple-200">
-              <p className="text-xs text-purple-600 font-semibold mb-1">Supply Circulante</p>
+              <p className="text-xs text-purple-600 font-semibold mb-1">Circulating Supply</p>
               <p className="text-xl sm:text-2xl font-bold text-purple-800">
                 {statsLoaded ? stats.circulatingSupply : '...'}
               </p>
@@ -112,7 +112,7 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
             </div>
 
             <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-4 text-center border border-amber-200">
-              <p className="text-xs text-amber-600 font-semibold mb-1">Liquidez do Pool</p>
+              <p className="text-xs text-amber-600 font-semibold mb-1">Pool Liquidity</p>
               <p className="text-xl sm:text-2xl font-bold text-amber-800">
                 {statsLoaded ? `$${stats.poolLiquidity}` : '...'}
               </p>
@@ -123,22 +123,22 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
 
         {/* How It Works */}
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-white text-center mb-6">Como Funciona</h2>
+          <h2 className="text-lg font-bold text-white text-center mb-6">How It Works</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
             <div className="card text-center hover:shadow-xl transition-shadow duration-200">
               <div className="text-4xl mb-3">&#9935;</div>
               <h3 className="text-lg font-bold text-gray-800 mb-2">Mining</h3>
               <p className="text-sm text-gray-600">
-                Compre poder de mineracao com USDT e ganhe ZOD automaticamente ao longo do tempo!
+                Buy mining power with USDT and earn ZOD automatically over time!
               </p>
             </div>
 
             <div className="card text-center hover:shadow-xl transition-shadow duration-200">
               <div className="text-4xl mb-3">&#128101;</div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Rede de Mineradores</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-2">Miners Network</h3>
               <p className="text-sm text-gray-600">
-                Construa sua rede de mineradores e ganhe boosts de mineracao em ate 5 niveis!
+                Build your miner network and earn mining boosts up to 5 levels!
               </p>
             </div>
 
@@ -146,7 +146,7 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
               <div className="text-4xl mb-3">&#128167;</div>
               <h3 className="text-lg font-bold text-gray-800 mb-2">Pool</h3>
               <p className="text-sm text-gray-600">
-                Troque ZOD por USDT no pool on-chain a qualquer momento com preco floor garantido!
+                Swap ZOD for USDT in the on-chain pool at any time with guaranteed floor price!
               </p>
             </div>
 
@@ -157,17 +157,17 @@ const LandingPage = ({ connect, isConnecting, onOpenWhitepaper }) => {
         <div className="text-center mb-8">
           <div className="card bg-gradient-to-r from-indigo-500 to-purple-600 border-0">
             <p className="text-white text-lg font-bold mb-2">
-              Pronto para comecar?
+              Ready to start?
             </p>
             <p className="text-white text-opacity-80 text-sm mb-4">
-              Conecte sua carteira para acessar o painel completo de mineracao, rede de mineradores e redistribuicao.
+              Connect your wallet to access the complete mining, miners network and redistribution panel.
             </p>
             <button
               onClick={connect}
               disabled={isConnecting}
               className="bg-white text-indigo-700 font-bold py-2 px-8 rounded-lg hover:bg-gray-100 transition-colors duration-200"
             >
-              {isConnecting ? 'Conectando...' : 'Conectar Agora'}
+              {isConnecting ? 'Connecting...' : 'Connect Now'}
             </button>
           </div>
         </div>
