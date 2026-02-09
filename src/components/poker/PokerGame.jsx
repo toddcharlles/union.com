@@ -12,6 +12,15 @@ const PHASE_NAMES = {
   showdown: 'Showdown',
 };
 
+const PHASE_COLORS = {
+  waiting: '#6b7280',
+  preflop: '#3b82f6',
+  flop: '#10b981',
+  turn: '#f59e0b',
+  river: '#ef4444',
+  showdown: '#a855f7',
+};
+
 const PokerGame = ({
   gameState,
   myHole,
@@ -39,6 +48,7 @@ const PokerGame = ({
   const board = gameState?.board || [];
   const activeSeat = gameState?.activeSeat ?? -1;
   const dealerSeat = gameState?.dealerSeat ?? -1;
+  const totalSeats = players.length || 6;
 
   // Build revealed cards map from allHands
   const revealedMap = {};
@@ -101,109 +111,143 @@ const PokerGame = ({
     setChatInput('');
   };
 
-  const handleAction = (action, amount) => {
-    onAction(action, amount);
-  };
+  const phaseColor = PHASE_COLORS[phase] || '#6b7280';
 
   return (
     <div className="poker-game">
-      {/* Top Bar */}
+      {/* === Top Bar === */}
       <div className="poker-game-topbar">
-        <button className="poker-btn poker-btn-ghost poker-btn-sm" onClick={onLeave}>
-          &#8592; Sair da Mesa
+        <button className="topbar-btn topbar-btn-leave" onClick={onLeave}>
+          <span>←</span> Sair
         </button>
-        <div className="topbar-info">
-          <span className="phase-badge">{PHASE_NAMES[phase] || phase}</span>
-          <span className="pot-display">Pot: <strong>${Number(pot).toLocaleString()}</strong></span>
+
+        <div className="topbar-center">
+          <div className="phase-badge" style={{ borderColor: phaseColor, color: phaseColor }}>
+            <span className="phase-dot" style={{ background: phaseColor }} />
+            {PHASE_NAMES[phase] || phase}
+          </div>
+          {pot > 0 && (
+            <div className="pot-display">
+              <span className="pot-label">POT</span>
+              <span className="pot-value">${Number(pot).toLocaleString()}</span>
+            </div>
+          )}
         </div>
+
         <button
-          className="poker-btn poker-btn-ghost poker-btn-sm"
+          className="topbar-btn topbar-btn-chat"
           onClick={() => setShowChat(prev => !prev)}
         >
-          Chat {showChat ? '▼' : '▲'}
+          💬 {messages.length > 0 && <span className="chat-badge">{messages.length}</span>}
         </button>
       </div>
 
-      {/* Notifications */}
+      {/* === Notifications === */}
       <div className="poker-notifications">
         {notifications.map(n => (
           <div key={n.id} className="poker-notif">{n.msg}</div>
         ))}
       </div>
 
-      {/* Table Area */}
-      <div className="poker-table-area">
-        <div className="poker-felt">
-          {/* Community Cards */}
-          <div className="community-cards">
-            {board.map((card, i) => (
-              <PokerCard key={i} card={card} />
-            ))}
-            {board.length === 0 && phase === 'waiting' && (
-              <div className="waiting-text">Aguardando jogadores...</div>
-            )}
+      {/* === Table Area === */}
+      <div className="poker-table-wrapper">
+        <div className="poker-table-area">
+          {/* Outer rail (wood) */}
+          <div className="poker-rail">
+            {/* Inner felt */}
+            <div className="poker-felt">
+              {/* Felt decorative line */}
+              <div className="felt-border-line" />
+
+              {/* Center logo / branding */}
+              <div className="felt-logo">ZOD</div>
+
+              {/* Community Cards */}
+              <div className="community-section">
+                <div className="community-cards">
+                  {board.map((card, i) => (
+                    <div key={i} className="community-card-slot" style={{ animationDelay: `${i * 0.1}s` }}>
+                      <PokerCard card={card} community />
+                    </div>
+                  ))}
+                  {board.length === 0 && phase === 'waiting' && (
+                    <div className="waiting-text">Aguardando jogadores...</div>
+                  )}
+                </div>
+
+                {/* Pot on felt */}
+                {pot > 0 && (
+                  <div className="felt-pot">
+                    <div className="felt-pot-chips">
+                      <div className="mini-chip mc-1" />
+                      <div className="mini-chip mc-2" />
+                      <div className="mini-chip mc-3" />
+                    </div>
+                    <span className="felt-pot-value">${Number(pot).toLocaleString()}</span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Pot indicator on felt */}
-          {pot > 0 && (
-            <div className="felt-pot">
-              <span>${Number(pot).toLocaleString()}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Seats around the table */}
-        <div className="poker-seats-container">
-          {players.map((player, i) => (
-            <PokerSeat
-              key={i}
-              player={player}
-              index={i}
-              isActive={i === activeSeat}
-              isDealer={i === dealerSeat}
-              isMe={i === mySeat}
-              holeCards={i === mySeat ? myHole : []}
-              revealedCards={revealedMap[i]}
-              isWinner={winnerMap[i] !== undefined}
-              winnerHand={winnerMap[i]}
-            />
-          ))}
+          {/* === Seats around the table === */}
+          <div className="poker-seats-container">
+            {players.map((player, i) => (
+              <PokerSeat
+                key={i}
+                player={player}
+                index={i}
+                totalSeats={totalSeats}
+                isActive={i === activeSeat}
+                isDealer={i === dealerSeat}
+                isMe={i === mySeat}
+                holeCards={i === mySeat ? myHole : []}
+                revealedCards={revealedMap[i]}
+                isWinner={winnerMap[i] !== undefined}
+                winnerHand={winnerMap[i]}
+                currentBet={player?.currentBet || 0}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Controls */}
+      {/* === Controls === */}
       <div className="poker-controls-area">
         {actionRequest ? (
-          <PokerControls actionRequest={actionRequest} onAction={handleAction} />
+          <PokerControls actionRequest={actionRequest} onAction={onAction} />
         ) : (
           <div className="controls-waiting">
             {phase === 'waiting'
               ? 'Aguardando mais jogadores...'
               : winners.length > 0
-                ? 'Mao encerrada!'
+                ? '🏆 Mão encerrada!'
                 : 'Aguardando sua vez...'}
           </div>
         )}
 
-        {/* Finalize button when hand ended */}
         {winners.length > 0 && (
           <button
-            className="poker-btn poker-btn-accent poker-btn-sm"
+            className="finalize-btn"
             onClick={() => onFinalize(tableId)}
-            style={{ marginTop: 8 }}
           >
-            Finalizar Mao (Settle)
+            Finalizar Mão (Settle)
           </button>
         )}
       </div>
 
-      {/* Chat Panel */}
+      {/* === Chat Panel === */}
       {showChat && (
         <div className="poker-chat-panel">
+          <div className="poker-chat-header">
+            <span>Chat da Mesa</span>
+            <button className="chat-close-btn" onClick={() => setShowChat(false)}>✕</button>
+          </div>
           <div className="poker-chat-messages" ref={chatRef}>
             {messages.map((m, i) => (
               <div key={i} className="chat-msg">
-                <strong>{m.name || 'Anon'}:</strong> {m.text || m.message}
+                <span className="chat-sender">{m.name || 'Anon'}</span>
+                <span className="chat-text">{m.text || m.message}</span>
               </div>
             ))}
             {messages.length === 0 && (
@@ -217,10 +261,10 @@ const PokerGame = ({
               onChange={(e) => setChatInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
               placeholder="Mensagem..."
-              className="poker-input"
+              className="chat-input-field"
             />
-            <button className="poker-btn poker-btn-primary poker-btn-sm" onClick={handleSendChat}>
-              Enviar
+            <button className="chat-send-btn" onClick={handleSendChat}>
+              ➤
             </button>
           </div>
         </div>

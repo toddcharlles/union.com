@@ -86,7 +86,7 @@ const PokerPage = ({ account, onBack }) => {
         <div className="poker-page-nav-right">
           {/* Mode badge */}
           <span className={`poker-mode-badge ${mode}`}>
-            {mode === 'onchain' ? '&#9939; On-Chain' : '&#9889; Off-Chain'}
+            {mode === 'onchain' ? '⛓ On-Chain' : '⚡ Off-Chain'}
           </span>
 
           {/* Admin button */}
@@ -96,7 +96,7 @@ const PokerPage = ({ account, onBack }) => {
               onClick={() => setShowAdmin(true)}
               title="Painel Admin"
             >
-              &#9881; Admin
+              ⚙ Admin
             </button>
           )}
         </div>
