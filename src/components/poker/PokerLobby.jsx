@@ -45,7 +45,7 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode
           <span className="poker-icon">&#9824;</span>
           <div>
             <h2>ZOD Poker</h2>
-            <p>Poker multiplayer {mode === 'onchain' ? 'on-chain na BNB Smart Chain' : 'off-chain — modo servidor'}</p>
+            <p>Poker multiplayer {mode === 'onchain' ? 'on-chain on BNB Smart Chain' : 'off-chain — server mode'}</p>
           </div>
         </div>
         <div className="poker-lobby-status">
@@ -57,12 +57,12 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode
       {/* Player Setup */}
       <div className="poker-lobby-setup">
         <div className="setup-field">
-          <label>Seu Nome</label>
+          <label>Your Name</label>
           <input
             type="text"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
-            placeholder="Min. 3 caracteres"
+            placeholder="Min. 3 characters"
             maxLength={20}
             className="poker-input"
           />
@@ -94,9 +94,9 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode
 
       {!connected ? (
         <div className="poker-lobby-connect">
-          <p>Conecte ao servidor de poker para ver as mesas disponiveis.</p>
+          <p>Connect to the poker server to see available tables.</p>
           <button className="poker-btn poker-btn-primary" onClick={onConnect}>
-            Conectar ao Servidor
+            Connect to Server
           </button>
         </div>
       ) : (
@@ -109,32 +109,32 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode
                   className="poker-btn poker-btn-accent"
                   onClick={() => setShowCreateForm(true)}
                 >
-                  + Criar Mesa
+                  + Create Table
                 </button>
               ) : (
                 <div className="poker-create-form">
-                  <h3>Criar Nova Mesa (Off-Chain)</h3>
+                  <h3>Create New Table (Off-Chain)</h3>
                   <div className="create-form-grid">
                     <div className="setup-field">
-                      <label>Nome da Mesa</label>
+                      <label>Table Name</label>
                       <input
                         type="text"
                         value={newTableName}
                         onChange={(e) => setNewTableName(e.target.value)}
-                        placeholder="Ex: Mesa VIP"
+                        placeholder="Ex: VIP Table"
                         maxLength={30}
                         className="poker-input"
                       />
                     </div>
                     <div className="setup-field">
-                      <label>Assentos</label>
+                      <label>Seats</label>
                       <select
                         value={newTableSeats}
                         onChange={(e) => setNewTableSeats(Number(e.target.value))}
                         className="poker-input"
                       >
                         {[2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
-                          <option key={n} value={n}>{n} jogadores</option>
+                          <option key={n} value={n}>{n} players</option>
                         ))}
                       </select>
                     </div>
@@ -170,13 +170,13 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode
                       onClick={handleCreateTable}
                       disabled={!newTableName.trim()}
                     >
-                      Criar Mesa
+                      Create Table
                     </button>
                     <button
                       className="poker-btn poker-btn-ghost"
                       onClick={() => setShowCreateForm(false)}
                     >
-                      Cancelar
+                      Cancel
                     </button>
                   </div>
                 </div>
@@ -190,17 +190,17 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode
               className="poker-btn poker-btn-ghost"
               onClick={onRefresh}
             >
-              Atualizar Mesas
+              Refresh Tables
             </button>
           </div>
 
           {/* Tables List */}
           <div className="poker-tables-list">
-            <h3>Mesas Disponiveis</h3>
+            <h3>Available Tables</h3>
             {tables.length === 0 ? (
               <div className="poker-empty-state">
                 <span className="empty-icon">&#9827;</span>
-                <p>{isAdmin ? 'Nenhuma mesa criada. Use "+ Criar Mesa" acima.' : 'Nenhuma mesa disponivel no momento.'}</p>
+                <p>{isAdmin ? 'No tables created. Use "+ Create Table" above.' : 'No tables available at the moment.'}</p>
               </div>
             ) : (
               <div className="poker-tables-grid">
@@ -213,7 +213,7 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode
                     <div className="table-card-header">
                       <span className="table-name">{table.name || table.id}</span>
                       <span className={`table-status ${table.phase === 'waiting' ? 'waiting' : 'playing'}`}>
-                        {table.phase === 'waiting' ? 'Aguardando' : 'Em Jogo'}
+                        {table.phase === 'waiting' ? 'Waiting' : 'In Game'}
                       </span>
                     </div>
                     <div className="table-card-info">
@@ -232,13 +232,13 @@ const PokerLobby = ({ tables, onJoinTable, onRefresh, connected, onConnect, mode
                         onClick={(e) => { e.stopPropagation(); handleJoin(table.id); }}
                         disabled={!playerName || playerName.length < 3}
                       >
-                        Entrar
+                        Join
                       </button>
                       {isAdmin && (
                         <button
                           className="poker-btn poker-btn-danger poker-btn-sm"
                           onClick={(e) => { e.stopPropagation(); onDeleteTable(table.id); }}
-                          title="Deletar mesa"
+                          title="Delete table"
                         >
                           &#128465;
                         </button>

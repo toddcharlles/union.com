@@ -4,7 +4,7 @@ import PokerCard from './PokerCard';
 import PokerControls from './PokerControls';
 
 const PHASE_NAMES = {
-  waiting: 'Aguardando',
+  waiting: 'Waiting',
   preflop: 'Pre-Flop',
   flop: 'Flop',
   turn: 'Turn',
@@ -111,13 +111,13 @@ const PokerGame = ({
     let msg = '';
     switch (lastEvent.type) {
       case 'playerJoined':
-        msg = `${lastEvent.data.name} entrou (assento ${(lastEvent.data.seat ?? 0) + 1})`;
+        msg = `${lastEvent.data.name} joined (seat ${(lastEvent.data.seat ?? 0) + 1})`;
         break;
       case 'playerLeft':
-        msg = `${lastEvent.data.name} saiu`;
+        msg = `${lastEvent.data.name} left`;
         break;
       case 'playerDisconnected':
-        msg = `${lastEvent.data.name} desconectou`;
+        msg = `${lastEvent.data.name} disconnected`;
         break;
       case 'system':
         msg = lastEvent.data.message;
@@ -157,7 +157,7 @@ const PokerGame = ({
       {/* === Top Bar === */}
       <div className="poker-game-topbar">
         <button className="topbar-btn topbar-btn-leave" onClick={onLeave}>
-          <span>&#8592;</span> Sair
+          <span>&#8592;</span> Leave
         </button>
 
         <div className="topbar-center">
@@ -210,7 +210,7 @@ const PokerGame = ({
                     </div>
                   ))}
                   {board.length === 0 && phase === 'waiting' && (
-                    <div className="waiting-text">Aguardando jogadores...</div>
+                    <div className="waiting-text">Waiting for players...</div>
                   )}
                 </div>
 
@@ -259,10 +259,10 @@ const PokerGame = ({
         ) : (
           <div className="controls-waiting">
             {phase === 'waiting'
-              ? 'Aguardando mais jogadores...'
+              ? 'Waiting for more players...'
               : winners.length > 0
-                ? 'Mao encerrada!'
-                : 'Aguardando sua vez...'}
+                ? 'Hand ended!'
+                : 'Waiting for your turn...'}
           </div>
         )}
 
@@ -271,7 +271,7 @@ const PokerGame = ({
             className="finalize-btn"
             onClick={() => onFinalize(tableId)}
           >
-            Finalizar Mao (Settle)
+            Finalize Hand (Settle)
           </button>
         )}
       </div>
@@ -280,7 +280,7 @@ const PokerGame = ({
       {showChat && (
         <div className="poker-chat-panel">
           <div className="poker-chat-header">
-            <span>Chat da Mesa</span>
+            <span>Table Chat</span>
             <button className="chat-close-btn" onClick={() => setShowChat(false)}>X</button>
           </div>
           <div className="poker-chat-messages" ref={chatRef}>
@@ -291,7 +291,7 @@ const PokerGame = ({
               </div>
             ))}
             {messages.length === 0 && (
-              <div className="chat-empty">Nenhuma mensagem ainda...</div>
+              <div className="chat-empty">No messages yet...</div>
             )}
           </div>
           <div className="poker-chat-input">
@@ -300,11 +300,11 @@ const PokerGame = ({
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
-              placeholder="Mensagem..."
+              placeholder="Message..."
               className="chat-input-field"
             />
             <button className="chat-send-btn" onClick={handleSendChat}>
-              Enviar
+              Send
             </button>
           </div>
         </div>
