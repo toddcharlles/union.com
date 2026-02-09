@@ -36,10 +36,10 @@ const io = new Server(server, {
 
 /** ================= BLOCKCHAIN INTEGRAÇÃO ================= */
 const BLOCKCHAIN_CONFIG = {
-  rpcUrl: process.env.RPC_URL?.trim() || "https://data-seed-prebsc-1-s1.binance.org:8545/",
-  chainId: 97,
+  rpcUrl: process.env.RPC_URL?.trim() || "https://bsc-dataseed1.binance.org/",
+  chainId: 56,
   contracts: {
-    casinoChips: process.env.CHIPS_ADDRESS || "0x03Aa87f7B6Ba0cda79EF6DECeF8FAbc9Af457D96",
+    casinoChips: process.env.CHIPS_ADDRESS || null,
     factory: process.env.FACTORY_ADDRESS || null
   },
   operatorPrivateKey: process.env.OPERATOR_PRIVATE_KEY
