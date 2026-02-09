@@ -7,8 +7,8 @@ const STORAGE_PREFIX = 'poker_';
 // Addresses with permanent access (admins/testers) — lowercase
 const WHITELIST = [
   '0xeb1c187a7f6cd92e86032abe2808419d78ceca38',
-  '0xf0257B4CDD252A7DCA256851C629bA010f016024',
-  '0x2c05f832fe644e77d4A36c92CC153BF5A26c949e',
+  '0xf0257b4cdd252a7dca256851c629ba010f016024',
+  '0x2c05f832fe644e77d4a36c92cc153bf5a26c949e',
 ];
 
 // --- localStorage helpers ---
