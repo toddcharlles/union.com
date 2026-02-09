@@ -1015,6 +1015,11 @@ html, body {
 
 .seat-cards-me {
   gap: 0.25rem;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
 }
 
 .seat-cards-me .pcard-sm {
