@@ -62,7 +62,7 @@ const useChatSocket = ({ account, isOpen, scrollToBottom, scrollToMessage, trigg
     socket.on('connect', () => {
       setIsConnected(true);
       setError('');
-      console.log('✅ Chat conectado');
+      console.log('✅ Chat connected');
       if (account) {
         socket.emit('authenticate', { address: account });
       }
@@ -71,12 +71,12 @@ const useChatSocket = ({ account, isOpen, scrollToBottom, scrollToMessage, trigg
     socket.on('disconnect', () => {
       setIsConnected(false);
       setIsAuthenticated(false);
-      console.log('❌ Chat desconectado');
+      console.log('❌ Chat disconnected');
     });
 
     socket.on('connect_error', (err) => {
-      console.error('Erro de conexão:', err);
-      setError('Erro ao conectar ao chat');
+      console.error('Connection error:', err);
+      setError('Error connecting to chat');
       setIsConnected(false);
     });
 
@@ -158,7 +158,7 @@ const useChatSocket = ({ account, isOpen, scrollToBottom, scrollToMessage, trigg
     });
 
     socket.on('banned', () => {
-      setError('Você foi banido do chat');
+      setError('You were banned from the chat');
       setIsAuthenticated(false);
     });
 
@@ -327,14 +327,14 @@ const useChatSocket = ({ account, isOpen, scrollToBottom, scrollToMessage, trigg
 
   const deleteMessage = useCallback((messageId) => {
     if (!account || !socketRef.current || !userData?.isAdmin) return;
-    if (window.confirm('Deletar esta mensagem?')) {
+    if (window.confirm('Delete this message?')) {
       socketRef.current.emit('deleteMessage', { address: account, messageId });
     }
   }, [account, userData]);
 
   const banUser = useCallback((targetAddress) => {
     if (!account || !socketRef.current || !userData?.isAdmin) return;
-    if (window.confirm(`Banir ${targetAddress.slice(0, 6)}...${targetAddress.slice(-4)} do chat?`)) {
+    if (window.confirm(`Ban ${targetAddress.slice(0, 6)}...${targetAddress.slice(-4)} from chat?`)) {
       socketRef.current.emit('banUser', { address: account, targetAddress });
     }
   }, [account, userData]);
@@ -382,14 +382,14 @@ const useChatSocket = ({ account, isOpen, scrollToBottom, scrollToMessage, trigg
 
   const closePoll = useCallback((pollId) => {
     if (!socketRef.current || !account) return;
-    if (window.confirm('Encerrar esta enquete?')) {
+    if (window.confirm('Close this poll?')) {
       socketRef.current.emit('closePoll', { address: account, pollId });
     }
   }, [account]);
 
   const deletePoll = useCallback((pollId) => {
     if (!socketRef.current || !account) return;
-    if (window.confirm('Deletar esta enquete permanentemente?')) {
+    if (window.confirm('Delete this poll permanently?')) {
       socketRef.current.emit('deletePoll', { address: account, pollId });
     }
   }, [account]);

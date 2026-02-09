@@ -9,31 +9,31 @@ export const LeaderboardPanel = ({ leaderboard, onClose }) => {
       style={{ background: 'linear-gradient(180deg, rgba(245,158,11,0.08) 0%, rgba(245,158,11,0.02) 100%)' }}
     >
       <div className="flex items-center justify-between px-4 py-2 bg-amber-500/10 sticky top-0 backdrop-blur-sm">
-        <span className="text-sm font-bold text-amber-400">🏆 Ranking Social</span>
+        <span className="text-sm font-bold text-amber-400">🏆 Social Ranking</span>
         <button onClick={onClose} className="text-amber-500/60 hover:text-amber-400 transition-colors">✕</button>
       </div>
 
       {leaderboard.messageOfDay && (
         <div className="px-4 py-2 border-b border-amber-500/10">
-          <p className="text-xs font-bold text-amber-400">🔥 Mensagem do Dia</p>
+          <p className="text-xs font-bold text-amber-400">🔥 Message of the Day</p>
           <p className="text-xs text-gray-400 mt-1">
             <span className="font-mono text-amber-300">@{leaderboard.messageOfDay.address?.slice(-4)}</span>
             : "{leaderboard.messageOfDay.message?.substring(0, 60)}"
-            <span className="ml-1 text-amber-500">({leaderboard.messageOfDay.totalReactions} reações)</span>
+            <span className="ml-1 text-amber-500">({leaderboard.messageOfDay.totalReactions} reactions)</span>
           </p>
         </div>
       )}
 
       {leaderboard.topUsersReacted?.length > 0 && (
         <div className="px-4 py-2 border-b border-amber-500/10">
-          <p className="text-xs font-bold text-amber-400 mb-1">💎 Mais Reagidos (Semana)</p>
+          <p className="text-xs font-bold text-amber-400 mb-1">💎 Most Reacted (Week)</p>
           {leaderboard.topUsersReacted.slice(0, 5).map((u, i) => (
             <div key={u.address} className="flex items-center justify-between text-xs py-0.5">
               <span>
                 <span className="text-amber-500 font-bold">{i + 1}.</span>{' '}
                 <span className="font-mono text-gray-300">{formatAddress(u.address)}</span>
               </span>
-              <span className="text-amber-400/70">{u.reactions} reações</span>
+              <span className="text-amber-400/70">{u.reactions} reactions</span>
             </div>
           ))}
         </div>
@@ -41,7 +41,7 @@ export const LeaderboardPanel = ({ leaderboard, onClose }) => {
 
       {leaderboard.topActive?.length > 0 && (
         <div className="px-4 py-2">
-          <p className="text-xs font-bold text-amber-400 mb-1">🗣️ Mais Ativos (Semana)</p>
+          <p className="text-xs font-bold text-amber-400 mb-1">🗣️ Most Active (Week)</p>
           {leaderboard.topActive.slice(0, 5).map((u, i) => (
             <div key={u.address} className="flex items-center justify-between text-xs py-0.5">
               <span>
@@ -63,12 +63,12 @@ export const HighlightsPanel = ({ communityHighlights, onClose, onScrollToMessag
     style={{ background: 'linear-gradient(180deg, rgba(168,85,247,0.08) 0%, rgba(168,85,247,0.02) 100%)' }}
   >
     <div className="flex items-center justify-between px-4 py-2 bg-purple-500/10 sticky top-0 backdrop-blur-sm">
-      <span className="text-sm font-bold text-purple-400">⭐ Destaques da Comunidade</span>
+      <span className="text-sm font-bold text-purple-400">⭐ Community Highlights</span>
       <button onClick={onClose} className="text-purple-500/60 hover:text-purple-400 transition-colors">✕</button>
     </div>
     {communityHighlights.length === 0 ? (
       <p className="text-center text-purple-400/60 text-xs py-4">
-        Mensagens com 20+ reações ou 10+ 💎 aparecem aqui
+        Messages with 20+ reactions or 10+ 💎 appear here
       </p>
     ) : (
       communityHighlights.slice().reverse().map((msg) => (
@@ -80,7 +80,7 @@ export const HighlightsPanel = ({ communityHighlights, onClose, onScrollToMessag
             <span>{msg.status?.emoji || '⚪'}</span>
             <span className="font-mono text-purple-300">@{msg.address?.slice(-4)}</span>
             <span className="text-purple-500/40">•</span>
-            <span className="text-purple-400/70">{getTotalReactions(msg.reactions)} reações</span>
+            <span className="text-purple-400/70">{getTotalReactions(msg.reactions)} reactions</span>
           </div>
           <p className="text-xs text-gray-400 truncate mt-0.5">{msg.message}</p>
         </div>
@@ -97,24 +97,24 @@ export const SocialMemoryPanel = ({ socialMemory, onClose }) => {
       style={{ background: 'linear-gradient(180deg, rgba(59,130,246,0.08) 0%, rgba(59,130,246,0.02) 100%)' }}
     >
       <div className="flex items-center justify-between px-4 py-2 bg-blue-500/10 sticky top-0 backdrop-blur-sm">
-        <span className="text-sm font-bold text-blue-400">📊 Memória Social</span>
+        <span className="text-sm font-bold text-blue-400">📊 Social Memory</span>
         <button onClick={onClose} className="text-blue-500/60 hover:text-blue-400 transition-colors">✕</button>
       </div>
 
       {socialMemory.mostReactedWeek && (
         <div className="px-4 py-2 border-b border-blue-500/10">
-          <p className="text-xs font-bold text-blue-400">🏅 Mensagem da Semana</p>
+          <p className="text-xs font-bold text-blue-400">🏅 Message of the Week</p>
           <p className="text-xs text-gray-400 mt-1">
             <span className="font-mono text-blue-300">@{socialMemory.mostReactedWeek.address?.slice(-4)}</span>
             : "{socialMemory.mostReactedWeek.message?.substring(0, 60)}"
-            <span className="ml-1 text-blue-400/70">({socialMemory.mostReactedWeek.totalReactions} reações)</span>
+            <span className="ml-1 text-blue-400/70">({socialMemory.mostReactedWeek.totalReactions} reactions)</span>
           </p>
         </div>
       )}
 
       {socialMemory.trending?.length > 0 && (
         <div className="px-4 py-2">
-          <p className="text-xs font-bold text-blue-400 mb-1">📈 Usuários em Alta</p>
+          <p className="text-xs font-bold text-blue-400 mb-1">📈 Trending Users</p>
           {socialMemory.trending.map((u, i) => (
             <div key={u.address} className="flex items-center justify-between text-xs py-0.5">
               <span>
@@ -122,7 +122,7 @@ export const SocialMemoryPanel = ({ socialMemory, onClose }) => {
                 <span className="font-mono text-gray-300">{formatAddress(u.address)}</span>
               </span>
               <span className="text-blue-400/70">
-                {u.reactions} reações • {u.messages} msgs
+                {u.reactions} reactions • {u.messages} msgs
               </span>
             </div>
           ))}
@@ -172,14 +172,14 @@ export const PollsPanel = ({ polls, userData, isReadOnly, onClose, onVote, onCre
       style={{ background: 'linear-gradient(180deg, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0.02) 100%)' }}
     >
       <div className="flex items-center justify-between px-4 py-2 bg-emerald-500/10 sticky top-0 z-10 backdrop-blur-sm">
-        <span className="text-sm font-bold text-emerald-400">🗳️ Enquetes</span>
+        <span className="text-sm font-bold text-emerald-400">🗳️ Polls</span>
         <div className="flex items-center gap-2">
           {userData?.isAdmin && (
             <button
               onClick={() => setShowCreatePoll(!showCreatePoll)}
               className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-1 rounded-lg transition-colors"
             >
-              + Nova
+              + New
             </button>
           )}
           <button onClick={onClose} className="text-emerald-500/60 hover:text-emerald-400 transition-colors">✕</button>
@@ -193,7 +193,7 @@ export const PollsPanel = ({ polls, userData, isReadOnly, onClose, onVote, onCre
             type="text"
             value={pollForm.question}
             onChange={(e) => setPollForm(prev => ({ ...prev, question: e.target.value }))}
-            placeholder="Pergunta da enquete..."
+            placeholder="Poll question..."
             maxLength={200}
             className="w-full bg-white/5 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm mb-2 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-400"
           />
@@ -204,7 +204,7 @@ export const PollsPanel = ({ polls, userData, isReadOnly, onClose, onVote, onCre
                 type="text"
                 value={opt}
                 onChange={(e) => updatePollOption(i, e.target.value)}
-                placeholder={`Opção ${i + 1}`}
+                placeholder={`Option ${i + 1}`}
                 maxLength={100}
                 className="flex-1 bg-white/5 border border-emerald-500/20 rounded-lg px-2 py-1 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-emerald-400"
               />
@@ -216,7 +216,7 @@ export const PollsPanel = ({ polls, userData, isReadOnly, onClose, onVote, onCre
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-2">
               {pollForm.options.length < 10 && (
-                <button onClick={addPollOption} className="text-xs text-emerald-400 hover:text-emerald-300">+ Opção</button>
+                <button onClick={addPollOption} className="text-xs text-emerald-400 hover:text-emerald-300">+ Option</button>
               )}
               <select
                 value={pollForm.duration}

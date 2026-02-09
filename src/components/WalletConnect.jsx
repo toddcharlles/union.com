@@ -101,21 +101,21 @@ const WalletConnect = ({ account, isConnecting, connect, disconnect, isCorrectNe
                   disabled={isConnecting}
                   className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 sm:px-6 rounded-md transition-colors text-sm"
                 >
-                  {isConnecting ? 'Conectando...' : 'Conectar'}
+                  {isConnecting ? 'Connecting...' : 'Connect'}
                 </button>
               ) : !isCorrectNetwork ? (
                 <button
                   onClick={switchNetwork}
                   className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 sm:px-6 py-2 rounded-md font-semibold text-sm"
                 >
-                  Mudar Rede
+                  Switch Network
                 </button>
               ) : (
                 <button
                   onClick={disconnect}
                   className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 py-2 rounded-md text-sm font-semibold"
                 >
-                  Desconectar
+                  Disconnect
                 </button>
               )}
             </div>
@@ -135,7 +135,7 @@ const WalletConnect = ({ account, isConnecting, connect, disconnect, isCorrectNe
       {account && !isCorrectNetwork && (
         <div className="max-w-7xl mx-auto px-3 sm:px-4 mt-4">
           <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 px-3 py-2 rounded-md text-xs sm:text-sm">
-            ⚠️ Por favor, mude para {CHAIN_CONFIG.chainName} para usar esta aplicação
+            ⚠️ Please switch to {CHAIN_CONFIG.chainName} to use this application
           </div>
         </div>
       )}

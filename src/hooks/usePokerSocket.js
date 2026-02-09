@@ -44,7 +44,7 @@ export function usePokerSocket(account) {
     });
 
     socket.on('connect_error', (err) => {
-      setError(`Falha na conexao: ${err.message}`);
+      setError(`Connection failed: ${err.message}`);
     });
 
     socket.on('tableList', (list) => {

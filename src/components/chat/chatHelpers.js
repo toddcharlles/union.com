@@ -35,11 +35,11 @@ export const formatRecordingTime = (seconds) => {
 // Tempo restante formatado para enquetes
 export const formatTimeRemaining = (endsAt) => {
   const remaining = endsAt - Date.now();
-  if (remaining <= 0) return 'Encerrada';
+  if (remaining <= 0) return 'Ended';
   const mins = Math.floor(remaining / 60000);
   const hours = Math.floor(mins / 60);
-  if (hours > 0) return `${hours}h ${mins % 60}min restantes`;
-  return `${mins}min restantes`;
+  if (hours > 0) return `${hours}h ${mins % 60}min remaining`;
+  return `${mins}min remaining`;
 };
 
 // Calcular total de reações de uma mensagem

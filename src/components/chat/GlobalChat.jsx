@@ -37,7 +37,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
   const [shareMenuId, setShareMenuId] = useState(null);
   const [chatMode, setChatMode] = useState('global');
   const [privateTarget, setPrivateTarget] = useState(null);
-  const [activeTab, setActiveTab] = useState('feed'); // feed, chats, rankings, perfil
+  const [activeTab, setActiveTab] = useState('feed'); // feed, chats, rankings, profile
   const [feedFilter, setFeedFilter] = useState('all'); // all, following
 
   const messagesEndRef = useRef(null);
@@ -164,9 +164,9 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
   // Share functions
   const shareAsText = useCallback((msg) => {
     const addr = formatAddress(msg.address);
-    const text = `"${msg.message}" — ${addr} no ZOD Social\n\nhttps://unionzod.com`;
+    const text = `"${msg.message}" — ${addr} on ZOD Social\n\nhttps://unionzod.com`;
     navigator.clipboard.writeText(text).then(() => {
-      socket.setNotification('Mensagem copiada!');
+      socket.setNotification('Message copied!');
       setTimeout(() => socket.setNotification(null), 2000);
     });
     setShareMenuId(null);
@@ -175,7 +175,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
   const shareOnX = useCallback((msg) => {
     const addr = formatAddress(msg.address);
     const text = encodeURIComponent(
-      `"${msg.message?.substring(0, 200)}" — ${addr} no ZOD Social 🔥\n\nhttps://unionzod.com`
+      `"${msg.message?.substring(0, 200)}" — ${addr} on ZOD Social 🔥\n\nhttps://unionzod.com`
     );
     window.open(`https://x.com/intent/tweet?text=${text}`, '_blank');
     setShareMenuId(null);
@@ -207,7 +207,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
       a.href = url; a.download = `zod-social-${msg.id}.png`; a.click(); URL.revokeObjectURL(url);
     });
     setShareMenuId(null);
-    socket.setNotification('Imagem gerada!');
+    socket.setNotification('Image generated!');
     setTimeout(() => socket.setNotification(null), 2000);
   }, [socket]);
 
@@ -215,8 +215,8 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
   const handleImageSelect = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith('image/')) { socket.setError('Apenas imagens são permitidas'); return; }
-    if (file.size > 500000) { socket.setError('Imagem muito grande (máx 500KB)'); return; }
+    if (!file.type.startsWith('image/')) { socket.setError('Only images are allowed'); return; }
+    if (file.size > 500000) { socket.setError('Image too large (max 500KB)'); return; }
     const reader = new FileReader();
     reader.onload = (event) => { setSelectedImage(event.target.result); setImagePreview(event.target.result); };
     reader.readAsDataURL(file);
@@ -249,7 +249,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
       let audioData = null;
       if (audio.audioBlob) {
         audioData = await blobToBase64(audio.audioBlob);
-        if (audioData.length > 1000000) { socket.setError('Áudio muito grande (máx 1MB)'); setIsSending(false); return; }
+        if (audioData.length > 1000000) { socket.setError('Audio too large (max 1MB)'); setIsSending(false); return; }
       }
       if (chatMode === 'private' && privateTarget) {
         socket.sendPrivateMessage({ targetAddress: privateTarget, message: newMessage.trim(), image: selectedImage || null, audio: audioData });
@@ -259,7 +259,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
       setNewMessage(''); setReplyTo(null); setSelectedImage(null); setImagePreview(null);
       audio.clearAudio();
       if (fileInputRef.current) fileInputRef.current.value = '';
-    } catch (err) { console.error('Erro ao enviar:', err); socket.setError('Erro ao enviar mensagem'); }
+    } catch (err) { console.error('Error sending:', err); socket.setError('Error sending message'); }
     setIsSending(false);
   };
 
@@ -283,7 +283,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
     { id: 'feed', icon: '🏠', label: 'Feed', onClick: () => { setActiveTab('feed'); if (chatMode === 'private') backToGlobal(); } },
     { id: 'chats', icon: '💬', label: 'Chats', badge: socket.unreadPrivate, onClick: () => { setActiveTab('chats'); } },
     { id: 'rankings', icon: '🏆', label: 'Rankings', onClick: () => { setActiveTab('rankings'); } },
-    { id: 'perfil', icon: '👤', label: 'Perfil', onClick: () => { setActiveTab('perfil'); } },
+    { id: 'profile', icon: '👤', label: 'Profile', onClick: () => { setActiveTab('profile'); } },
   ];
 
   // ===========================
@@ -336,7 +336,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
                 : 'text-gray-500 hover:text-gray-300'
             }`}
           >
-            Todos
+            All
           </button>
           <button
             onClick={() => setFeedFilter('following')}
@@ -346,7 +346,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
                 : 'text-gray-500 hover:text-gray-300'
             }`}
           >
-            Seguindo
+            Following
             {followingSet.size > 0 && (
               <span className="text-[10px] bg-indigo-500/30 px-1.5 rounded-full">{followingSet.size}</span>
             )}
@@ -357,7 +357,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
       {/* Pinned messages */}
       {socket.pinnedMessages.length > 0 && (
         <div className="post-card p-3">
-          <p className="text-xs font-bold text-amber-400 mb-2">📌 Fixadas</p>
+          <p className="text-xs font-bold text-amber-400 mb-2">📌 Pinned</p>
           {socket.pinnedMessages.slice(-2).map((msg) => (
             <div key={msg.id}
               className="text-xs text-gray-400 truncate cursor-pointer hover:text-amber-300 transition-colors py-1"
@@ -379,13 +379,13 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
           >
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-500 to-emerald-300"></div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">📌 🗳️ Enquete Ativa</span>
+              <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">📌 🗳️ Active Poll</span>
               <span className="text-[10px] text-emerald-400/60 ml-auto">⏳ {formatTimeRemaining(poll.endsAt)}</span>
             </div>
             <p className="text-sm font-semibold text-gray-200 mb-1">{poll.question}</p>
             <p className="text-[10px] text-emerald-400/60 mb-3">
-              {poll.totalVotes} voto{poll.totalVotes !== 1 ? 's' : ''}
-              {poll.allowMultiple && ' • Múltipla escolha'}
+              {poll.totalVotes} vote{poll.totalVotes !== 1 ? 's' : ''}
+              {poll.allowMultiple && ' • Multiple choice'}
             </p>
             <div className="space-y-1.5">
               {poll.options.map((opt) => {
@@ -428,7 +428,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
       {/* Read-only banner */}
       {isReadOnly && (
         <div className="post-card p-4 text-center">
-          <p className="text-indigo-300 text-sm">👀 <strong>Modo Leitura</strong> — Conecte sua carteira com ZOD para participar</p>
+          <p className="text-indigo-300 text-sm">👀 <strong>Read Mode</strong> — Connect your wallet with ZOD to participate</p>
         </div>
       )}
 
@@ -439,13 +439,13 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
           <p className="text-sm">
             {feedFilter === 'following'
               ? followingSet.size === 0
-                ? 'Você ainda não segue ninguém'
-                : 'Nenhuma publicação de quem você segue'
-              : 'Nenhuma publicação ainda'
+                ? 'You\'re not following anyone yet'
+                : 'No posts from people you follow'
+              : 'No posts yet'
             }
           </p>
           {feedFilter === 'following' && followingSet.size === 0 && (
-            <p className="text-xs text-gray-600 mt-2">Toque em "Seguir" nos posts para acompanhar outros usuários</p>
+            <p className="text-xs text-gray-600 mt-2">Tap "Follow" on posts to track other users</p>
           )}
         </div>
       )}
@@ -499,10 +499,10 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
           </span>
           <span>
             {socket.typingUsers.length === 1
-              ? `@${socket.typingUsers[0].slice(-4)} está digitando...`
+              ? `@${socket.typingUsers[0].slice(-4)} is typing...`
               : socket.typingUsers.length <= 3
-              ? `${socket.typingUsers.map(a => '@' + a.slice(-4)).join(', ')} estão digitando...`
-              : `${socket.typingUsers.length} pessoas estão digitando...`
+              ? `${socket.typingUsers.map(a => '@' + a.slice(-4)).join(', ')} are typing...`
+              : `${socket.typingUsers.length} people are typing...`
             }
           </span>
         </div>
@@ -535,7 +535,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
           {socket.privateMessages.length === 0 && (
             <div className="text-center text-gray-500 py-12">
               <p className="text-5xl mb-3">🔒</p>
-              <p className="text-sm">Inicie uma conversa privada</p>
+              <p className="text-sm">Start a private conversation</p>
             </div>
           )}
 
@@ -608,7 +608,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
           {/* Conversations list */}
           <div className="post-card p-4">
             <h2 className="text-white font-bold text-base mb-4 flex items-center gap-2">
-              💬 Conversas Privadas
+              💬 Private Conversations
               {socket.unreadPrivate > 0 && (
                 <span className="bg-red-500 text-white text-[10px] rounded-full px-2 py-0.5 font-bold">{socket.unreadPrivate}</span>
               )}
@@ -617,8 +617,8 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
             {socket.conversations.length === 0 ? (
               <div className="text-center text-gray-500 py-8">
                 <p className="text-3xl mb-2">💬</p>
-                <p className="text-sm">Nenhuma conversa ainda</p>
-                <p className="text-xs text-gray-600 mt-1">Toque no menu ⋯ de um post para enviar uma mensagem privada</p>
+                <p className="text-sm">No conversations yet</p>
+                <p className="text-xs text-gray-600 mt-1">Tap the ⋯ menu on a post to send a private message</p>
               </div>
             ) : (
               <div className="space-y-1">
@@ -659,7 +659,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
   // ===========================
   const renderRankingsTab = () => (
     <>
-      <h2 className="text-white font-bold text-base mb-4 flex items-center gap-2">🏆 Rankings & Comunidade</h2>
+      <h2 className="text-white font-bold text-base mb-4 flex items-center gap-2">🏆 Rankings & Community</h2>
 
       {/* Leaderboard */}
       <div className="post-card overflow-hidden mb-4">
@@ -698,9 +698,9 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
   );
 
   // ===========================
-  // RENDER PERFIL TAB
+  // RENDER PROFILE TAB
   // ===========================
-  const renderPerfilTab = () => (
+  const renderProfileTab = () => (
     <>
       {account ? (
         <>
@@ -737,12 +737,12 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
             <div className="flex items-center justify-center gap-6 mt-4">
               <div className="text-center">
                 <p className="text-white font-bold text-lg">{socket.followCounts?.followers || 0}</p>
-                <p className="text-gray-500 text-[10px]">Seguidores</p>
+                <p className="text-gray-500 text-[10px]">Followers</p>
               </div>
               <div className="w-px h-8 bg-white/10"></div>
               <div className="text-center">
                 <p className="text-white font-bold text-lg">{socket.followCounts?.following || 0}</p>
-                <p className="text-gray-500 text-[10px]">Seguindo</p>
+                <p className="text-gray-500 text-[10px]">Following</p>
               </div>
               <div className="w-px h-8 bg-white/10"></div>
               <div className="text-center">
@@ -754,20 +754,20 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
             {/* Connection status */}
             <div className="flex items-center justify-center gap-2 mt-4">
               <span className={`w-2 h-2 rounded-full ${socket.isConnected ? 'bg-emerald-400' : 'bg-red-500'}`}></span>
-              <span className="text-xs text-gray-400">{socket.isConnected ? 'Conectado' : 'Desconectado'}</span>
+              <span className="text-xs text-gray-400">{socket.isConnected ? 'Connected' : 'Disconnected'}</span>
             </div>
           </div>
 
           {/* Stats */}
           <div className="post-card p-4">
-            <h3 className="text-white font-bold text-sm mb-3">Informações</h3>
+            <h3 className="text-white font-bold text-sm mb-3">Information</h3>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-gray-400">Status</span>
-                <span className="text-white">{socket.userData?.status?.label || 'Carregando...'}</span>
+                <span className="text-white">{socket.userData?.status?.label || 'Loading...'}</span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-400">Usuários online</span>
+                <span className="text-gray-400">Online users</span>
                 <span className="text-emerald-400">{socket.userCount}</span>
               </div>
               {socket.userData?.isAdmin && (
@@ -782,7 +782,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
           {/* Following list */}
           {(socket.following || []).length > 0 && (
             <div className="post-card p-4">
-              <h3 className="text-white font-bold text-sm mb-3">Seguindo ({socket.following.length})</h3>
+              <h3 className="text-white font-bold text-sm mb-3">Following ({socket.following.length})</h3>
               <div className="space-y-2">
                 {socket.following.map((addr) => (
                   <div key={addr} className="flex items-center gap-2.5">
@@ -794,7 +794,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
                       onClick={() => socket.unfollowUser(addr)}
                       className="text-[10px] font-bold px-2 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all"
                     >
-                      Deixar de seguir
+                      Unfollow
                     </button>
                   </div>
                 ))}
@@ -805,7 +805,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
           {/* Followers list */}
           {(socket.followers || []).length > 0 && (
             <div className="post-card p-4">
-              <h3 className="text-white font-bold text-sm mb-3">Seguidores ({socket.followers.length})</h3>
+              <h3 className="text-white font-bold text-sm mb-3">Followers ({socket.followers.length})</h3>
               <div className="space-y-2">
                 {socket.followers.map((addr) => (
                   <div key={addr} className="flex items-center gap-2.5">
@@ -818,7 +818,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
                         onClick={() => socket.followUser(addr)}
                         className="text-[10px] font-bold px-2 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-all"
                       >
-                        Seguir de volta
+                        Follow back
                       </button>
                     )}
                   </div>
@@ -830,7 +830,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
       ) : (
         <div className="post-card p-8 text-center">
           <p className="text-5xl mb-4">👤</p>
-          <p className="text-gray-400 text-sm">Conecte sua carteira para ver seu perfil</p>
+          <p className="text-gray-400 text-sm">Connect your wallet to see your profile</p>
         </div>
       )}
     </>
@@ -886,17 +886,17 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
             <div className="sidebar-card p-3 mb-4 cursor-pointer hover:border-emerald-500/30 transition-all"
               onClick={() => setActiveTab('rankings')}
             >
-              <p className="text-amber-400 text-xs font-bold mb-1">🔥 Enquete Ativa | Participe!</p>
+              <p className="text-amber-400 text-xs font-bold mb-1">🔥 Active Poll | Participate!</p>
               <p className="text-gray-400 text-xs truncate">{activePolls[0]?.question}</p>
             </div>
           )}
 
-          {/* Top da Semana (mini) */}
+          {/* Top of the Week (mini) */}
           {socket.leaderboard?.topUsersReacted?.length > 0 && (
             <div className="sidebar-card p-3">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-white text-xs font-bold">Top da Semana</p>
-                <button onClick={() => setActiveTab('rankings')} className="text-gray-500 text-[10px] hover:text-indigo-400">Ver mais</button>
+                <p className="text-white text-xs font-bold">Top of the Week</p>
+                <button onClick={() => setActiveTab('rankings')} className="text-gray-500 text-[10px] hover:text-indigo-400">See more</button>
               </div>
               {socket.leaderboard.topUsersReacted.slice(0, 3).map((u) => (
                 <div key={u.address} className="flex items-center gap-2 py-1">
@@ -920,7 +920,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
             {activeTab === 'feed' && renderFeedTab()}
             {activeTab === 'chats' && renderChatsTab()}
             {activeTab === 'rankings' && renderRankingsTab()}
-            {activeTab === 'perfil' && renderPerfilTab()}
+            {activeTab === 'profile' && renderProfileTab()}
           </div>
         </main>
 
@@ -951,18 +951,18 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
             </div>
           )}
 
-          {/* Rankings da Semana */}
+          {/* Weekly Rankings */}
           <div className="sidebar-card p-4">
-            <h3 className="text-white font-bold text-sm mb-3">Rankings da Semana</h3>
+            <h3 className="text-white font-bold text-sm mb-3">Weekly Rankings</h3>
             <div className="space-y-2">
               <button onClick={() => setActiveTab('rankings')} className="w-full flex items-center gap-2 text-left text-gray-400 hover:text-amber-400 transition-colors text-xs py-1">
-                <span>🏆</span> Mais Curtidas
+                <span>🏆</span> Most Liked
               </button>
               <button onClick={() => setActiveTab('rankings')} className="w-full flex items-center gap-2 text-left text-gray-400 hover:text-purple-400 transition-colors text-xs py-1">
-                <span>⭐</span> Top Mensagens
+                <span>⭐</span> Top Messages
               </button>
               <button onClick={() => setActiveTab('rankings')} className="w-full flex items-center gap-2 text-left text-gray-400 hover:text-blue-400 transition-colors text-xs py-1">
-                <span>📊</span> Mais Mencionados
+                <span>📊</span> Most Mentioned
               </button>
             </div>
             {socket.leaderboard?.topUsersReacted?.length > 0 && (
@@ -1022,7 +1022,7 @@ const GlobalChat = ({ account, isOpen, onClose }) => {
       {fullscreenImage && (
         <div className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setFullscreenImage(null)}>
           <button className="absolute top-4 right-4 text-white/60 hover:text-white text-3xl transition-colors" onClick={() => setFullscreenImage(null)}>✕</button>
-          <img src={fullscreenImage} alt="Imagem em tela cheia" className="max-w-full max-h-full object-contain rounded-lg" onClick={(e) => e.stopPropagation()} />
+          <img src={fullscreenImage} alt="Full screen image" className="max-w-full max-h-full object-contain rounded-lg" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
     </div>

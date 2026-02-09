@@ -25,7 +25,7 @@ const ChatHeader = ({
         </div>
         <div>
           <h1 className="text-white font-bold text-sm leading-tight">ZOD Social</h1>
-          <p className="text-gray-500 text-[10px]">Sua carteira é sua identidade</p>
+          <p className="text-gray-500 text-[10px]">Your wallet is your identity</p>
         </div>
       </div>
 
@@ -35,7 +35,7 @@ const ChatHeader = ({
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">🔍</span>
           <input
             type="text"
-            placeholder="Buscar..."
+            placeholder="Search..."
             className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50"
           />
         </div>

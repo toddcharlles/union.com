@@ -133,7 +133,7 @@ const ChatMessage = ({
               )}
 
               {isOwn && (
-                <span className="text-[10px] text-indigo-400/60 font-medium">• você</span>
+                <span className="text-[10px] text-indigo-400/60 font-medium">• you</span>
               )}
               {!isOwn && !isReadOnly && onToggleFollow && (
                 <button
@@ -144,7 +144,7 @@ const ChatMessage = ({
                       : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-indigo-500/20 hover:text-indigo-300 hover:border-indigo-500/30'
                   }`}
                 >
-                  {isFollowing ? 'Seguindo' : 'Seguir'}
+                  {isFollowing ? 'Following' : 'Follow'}
                 </button>
               )}
             </div>
@@ -171,13 +171,13 @@ const ChatMessage = ({
                     onClick={() => { onReply(msg); setShowMenu(false); }}
                     className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-white/5 flex items-center gap-2"
                   >
-                    ↩️ Responder
+                    ↩️ Reply
                   </button>
                   <button
                     onClick={() => { onSetShowReactions(showReactions === msg.id ? null : msg.id); setShowMenu(false); }}
                     className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-white/5 flex items-center gap-2"
                   >
-                    😀 Reagir
+                    😀 React
                   </button>
                   {!isOwn && (
                     <>
@@ -185,7 +185,7 @@ const ChatMessage = ({
                         onClick={() => { onToggleFollow && onToggleFollow(address); setShowMenu(false); }}
                         className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-white/5 flex items-center gap-2"
                       >
-                        {isFollowing ? '➖ Deixar de seguir' : '➕ Seguir'}
+                        {isFollowing ? '➖ Unfollow' : '➕ Follow'}
                       </button>
                       <button
                         onClick={() => { onOpenPrivateChat(address); setShowMenu(false); }}

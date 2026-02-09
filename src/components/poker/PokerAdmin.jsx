@@ -47,14 +47,14 @@ const PokerAdmin = ({ onClose }) => {
         <div className="admin-header">
           <div className="admin-header-title">
             <span className="admin-icon">&#9881;</span>
-            <h2>Painel Admin — Poker</h2>
+            <h2>Admin Panel — Poker</h2>
           </div>
           <button className="admin-close" onClick={onClose}>&#10005;</button>
         </div>
 
         {/* Modo do jogo */}
         <div className="admin-section">
-          <h3>Modo do Jogo</h3>
+          <h3>Game Mode</h3>
           <div className="admin-mode-toggle">
             <button
               className={`mode-btn ${!isOnChain ? 'active' : ''}`}
@@ -63,7 +63,7 @@ const PokerAdmin = ({ onClose }) => {
               <span className="mode-icon">&#9889;</span>
               <div>
                 <strong>Off-chain</strong>
-                <p>Jogo rapido no servidor, sem gas, sem transacoes. Ideal para testes e partidas casuais.</p>
+                <p>Fast server-side game, no gas, no transactions. Ideal for testing and casual games.</p>
               </div>
             </button>
             <button
@@ -73,7 +73,7 @@ const PokerAdmin = ({ onClose }) => {
               <span className="mode-icon">&#9939;</span>
               <div>
                 <strong>On-chain</strong>
-                <p>Chips tokenizados na BSC. Deposit, withdraw e settlement verificaveis na blockchain.</p>
+                <p>Tokenized chips on BSC. Deposit, withdraw and settlement verifiable on the blockchain.</p>
               </div>
             </button>
           </div>
@@ -84,11 +84,11 @@ const PokerAdmin = ({ onClose }) => {
 
         {/* Acesso */}
         <div className="admin-section">
-          <h3>Controle de Acesso</h3>
+          <h3>Access Control</h3>
           <div className="admin-row">
             <div>
-              <strong>Acesso publico</strong>
-              <p className="admin-hint">Quando ativo, todos os usuarios conectados veem o poker.</p>
+              <strong>Public access</strong>
+              <p className="admin-hint">When active, all connected users see poker.</p>
             </div>
             <button
               className={`admin-toggle ${config.publicAccess ? 'on' : 'off'}`}
@@ -102,7 +102,7 @@ const PokerAdmin = ({ onClose }) => {
 
         {/* Servidor */}
         <div className="admin-section">
-          <h3>Servidor de Poker</h3>
+          <h3>Poker Server</h3>
           <label className="admin-label">URL do Servidor (Socket.io)</label>
           <input
             type="text"
@@ -116,7 +116,7 @@ const PokerAdmin = ({ onClose }) => {
         {/* Contratos — so mostra se on-chain */}
         {isOnChain && (
           <div className="admin-section">
-            <h3>Contratos On-Chain (BSC Mainnet)</h3>
+            <h3>On-Chain Contracts (BSC Mainnet)</h3>
             <label className="admin-label">Casino Chips (ERC20)</label>
             <input
               type="text"
@@ -139,10 +139,10 @@ const PokerAdmin = ({ onClose }) => {
         {/* Salvar */}
         <div className="admin-footer">
           <button className="poker-btn poker-btn-primary" onClick={handleSave}>
-            {saved ? 'Salvo!' : 'Salvar Configuracoes'}
+            {saved ? 'Saved!' : 'Save Settings'}
           </button>
           <button className="poker-btn poker-btn-ghost" onClick={onClose}>
-            Fechar
+            Close
           </button>
         </div>
       </div>

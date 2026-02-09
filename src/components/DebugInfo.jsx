@@ -33,7 +33,7 @@ const formatLogArg = (arg) => {
 };
 
 const addLog = (type, args) => {
-  const timestamp = new Date().toLocaleTimeString('pt-BR');
+  const timestamp = new Date().toLocaleTimeString('en-US');
   const message = args.map(formatLogArg).join(' ');
 
   const logEntry = { type, message, timestamp, id: Date.now() + Math.random() };
@@ -106,14 +106,14 @@ Chain ID: ${chainId || 'Unknown'}
 Expected: ${CHAIN_CONFIG.chainId} (${CHAIN_CONFIG.chainName})
 Network OK: ${isCorrectNetwork ? 'Yes' : 'No'}
 Contracts: ${contracts ? 'Initialized' : 'Not initialized'}
-Timestamp: ${new Date().toLocaleString('pt-BR')}
+Timestamp: ${new Date().toLocaleString('en-US')}
 
 === Console Logs ===
 `;
     const logText = logs.map(l => `[${l.timestamp}] [${l.type.toUpperCase()}] ${l.message}`).join('\n');
 
     navigator.clipboard.writeText(status + logText);
-    alert('Logs copiados! Cole no chat para enviar.');
+    alert('Logs copied! Paste in chat to send.');
   };
 
   const clearLogs = () => {
@@ -191,20 +191,20 @@ Timestamp: ${new Date().toLocaleString('pt-BR')}
       {/* Status Bar */}
       <div className="px-3 py-2 bg-gray-800 border-b border-gray-700 text-xs flex flex-wrap gap-3">
         <span className={account ? 'text-green-400' : 'text-red-400'}>
-          {account ? `🔗 ${account.slice(0, 6)}...${account.slice(-4)}` : '🔌 Desconectado'}
+          {account ? `🔗 ${account.slice(0, 6)}...${account.slice(-4)}` : '🔌 Disconnected'}
         </span>
         <span className={isCorrectNetwork ? 'text-green-400' : 'text-red-400'}>
           {isCorrectNetwork ? '✅ BSC Mainnet' : `❌ Chain ${chainId || '?'}`}
         </span>
         <span className={contracts ? 'text-green-400' : 'text-yellow-400'}>
-          {contracts ? '📄 Contratos OK' : '⏳ Aguardando...'}
+          {contracts ? '📄 Contracts OK' : '⏳ Waiting...'}
         </span>
       </div>
 
       {/* Logs */}
       <div className="flex-1 overflow-y-auto p-2 font-mono text-xs bg-black bg-opacity-50 min-h-[200px] max-h-[400px]">
         {logs.length === 0 ? (
-          <p className="text-gray-500 text-center py-4">Nenhum log ainda...</p>
+          <p className="text-gray-500 text-center py-4">No logs yet...</p>
         ) : (
           logs.map((log) => (
             <div key={log.id} className={`py-1 border-b border-gray-800 ${getLogColor(log.type)}`}>
@@ -219,7 +219,7 @@ Timestamp: ${new Date().toLocaleString('pt-BR')}
 
       {/* Footer */}
       <div className="px-3 py-2 bg-gray-800 border-t border-gray-700 text-xs text-gray-400 rounded-b-lg">
-        {logs.length} logs | Clique em "Copiar" e envie para suporte
+        {logs.length} logs | Click "Copy" and send to support
       </div>
     </div>
   );

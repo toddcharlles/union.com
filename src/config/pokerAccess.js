@@ -1,6 +1,6 @@
-// Controle de acesso e configuracao do ZOD Poker
-// O poker so aparece para enderecos autorizados ate que o admin libere para todos.
-// O admin tambem controla se o poker roda off-chain ou on-chain.
+// ZOD Poker access control and configuration
+// Poker only appears for authorized addresses until the admin releases it to everyone.
+// The admin also controls whether poker runs off-chain or on-chain.
 
 const STORAGE_PREFIX = 'poker_';
 

@@ -45,8 +45,8 @@ const useChatAudio = (setError) => {
       }, 1000);
 
     } catch (err) {
-      console.error('Erro ao acessar microfone:', err);
-      setError('Não foi possível acessar o microfone');
+      console.error('Error accessing microphone:', err);
+      setError('Could not access the microphone');
     }
   };
 

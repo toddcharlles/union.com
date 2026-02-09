@@ -50,8 +50,8 @@ const ChatInput = ({
       <div className="post-card p-4 text-center">
         <p className="text-gray-500 text-sm">
           {!account
-            ? '👀 Conecte sua carteira para participar da comunidade'
-            : error || 'Verificando acesso...'
+            ? '👀 Connect your wallet to participate in the community'
+            : error || 'Checking access...'
           }
         </p>
       </div>
@@ -64,7 +64,7 @@ const ChatInput = ({
       {replyTo && (
         <div className="flex items-center justify-between mb-3 px-3 py-2 bg-white/5 rounded-xl border-l-2 border-indigo-500/50">
           <div className="text-xs text-gray-400">
-            <span className="text-indigo-400 font-medium">↩️ Respondendo @{replyTo.address?.slice(-4)}</span>
+            <span className="text-indigo-400 font-medium">↩️ Replying to @{replyTo.address?.slice(-4)}</span>
             <span className="ml-1 text-gray-500">{replyTo.message?.substring(0, 40)}...</span>
           </div>
           <button onClick={onCancelReply} className="text-gray-500 hover:text-white transition-colors text-sm">✕</button>
@@ -76,11 +76,11 @@ const ChatInput = ({
         <div className="flex items-center gap-3 mb-3 px-3 py-2 bg-red-500/10 rounded-xl border border-red-500/20">
           <span className="animate-pulse text-red-400 text-lg">🎤</span>
           <div className="flex-1">
-            <span className="text-red-300 font-medium text-sm">Gravando...</span>
+            <span className="text-red-300 font-medium text-sm">Recording...</span>
             <span className="ml-2 text-red-400 text-sm">{formatRecordingTime(recordingTime)}</span>
-            <span className="ml-2 text-[10px] text-red-500/60">(máx 1 min)</span>
+            <span className="ml-2 text-[10px] text-red-500/60">(max 1 min)</span>
           </div>
-          <button onClick={onStopRecording} className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-lg text-xs transition-colors">Parar</button>
+          <button onClick={onStopRecording} className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-lg text-xs transition-colors">Stop</button>
           <button onClick={onCancelRecording} className="text-red-400 hover:text-red-300 text-sm">✕</button>
         </div>
       )}
@@ -89,7 +89,7 @@ const ChatInput = ({
       {imagePreview && (
         <div className="flex items-center gap-3 mb-3">
           <img src={imagePreview} alt="Preview" className="h-16 w-16 object-cover rounded-xl border border-white/10" />
-          <span className="text-xs text-gray-400 flex-1">📷 Imagem selecionada</span>
+          <span className="text-xs text-gray-400 flex-1">📷 Image selected</span>
           <button onClick={onRemoveImage} className="text-red-400 hover:text-red-300 transition-colors text-sm">✕</button>
         </div>
       )}
@@ -126,7 +126,7 @@ const ChatInput = ({
             value={newMessage}
             onChange={onMessageChange}
             onKeyPress={onKeyPress}
-            placeholder={chatMode === 'private' ? 'Mensagem privada...' : 'O que está acontecendo?'}
+            placeholder={chatMode === 'private' ? 'Private message...' : 'What\'s happening?'}
             maxLength={500}
             disabled={!isConnected || isSending || isRecording}
             className="w-full bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none disabled:opacity-30 py-1"
@@ -146,7 +146,7 @@ const ChatInput = ({
                 onClick={() => fileInputRef.current?.click()}
                 disabled={!isConnected || isSending || isRecording}
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-500 hover:text-indigo-400 hover:bg-white/5 disabled:opacity-30 transition-all text-sm"
-                title="Enviar imagem"
+                title="Send image"
               >
                 📷
               </button>
@@ -156,7 +156,7 @@ const ChatInput = ({
                 className={`w-8 h-8 rounded-lg flex items-center justify-center disabled:opacity-30 transition-all text-sm ${
                   isRecording ? 'text-red-400 bg-red-500/10' : 'text-gray-500 hover:text-indigo-400 hover:bg-white/5'
                 }`}
-                title="Gravar áudio"
+                title="Record audio"
               >
                 🎤
               </button>
@@ -169,7 +169,7 @@ const ChatInput = ({
                 disabled={!isConnected || (!newMessage.trim() && !selectedImage && !audioBlob) || isSending || isRecording}
                 className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-full text-xs font-bold transition-all"
               >
-                Publicar
+                Publish
               </button>
             </div>
           </div>

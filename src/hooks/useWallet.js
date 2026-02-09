@@ -138,7 +138,7 @@ export const useWallet = () => {
     }
 
     if (!walletProvider) {
-      setError('Carteira nao detectada. Por favor, abra este site no navegador da sua carteira (Trust Wallet, MetaMask, etc).');
+      setError('Wallet not detected. Please open this site in your wallet browser (Trust Wallet, MetaMask, etc).');
       return;
     }
 
@@ -201,11 +201,11 @@ export const useWallet = () => {
           });
         } catch (addError) {
           console.error('Error adding network:', addError);
-          setError('Falha ao adicionar rede BSC na carteira');
+          setError('Failed to add BSC network to wallet');
         }
       } else {
         console.error('Error switching network:', switchError);
-        setError('Falha ao trocar de rede');
+        setError('Failed to switch network');
       }
     }
   };

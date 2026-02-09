@@ -174,7 +174,7 @@ function App() {
                     <div>
                       <h3 className="text-lg sm:text-xl font-bold text-white mb-1">ZOD Poker</h3>
                       <p className="text-sm text-emerald-300 opacity-80">
-                        Poker multiplayer on-chain. Jogue Texas Hold'em com chips tokenizados na BSC.
+                        Multiplayer on-chain poker. Play Texas Hold'em with tokenized chips on BSC.
                       </p>
                     </div>
                   </div>
@@ -182,7 +182,7 @@ function App() {
                     className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2.5 px-6 rounded-xl transition-colors text-sm shadow-lg shadow-emerald-500/30"
                     onClick={(e) => { e.stopPropagation(); setShowPoker(true); }}
                   >
-                    Jogar Agora &#8594;
+                    Play Now &#8594;
                   </button>
                 </div>
 
@@ -190,7 +190,7 @@ function App() {
                 {isAdmin && (
                   <div className="mt-3 pt-3 border-t border-emerald-700 flex items-center justify-between">
                     <span className="text-xs text-emerald-400">
-                      Acesso publico: <strong>{pokerPublic ? 'ATIVO' : 'RESTRITO'}</strong>
+                      Public access: <strong>{pokerPublic ? 'ACTIVE' : 'RESTRICTED'}</strong>
                     </span>
                     <button
                       className={`text-xs font-bold px-4 py-1.5 rounded-lg transition-colors ${
@@ -200,7 +200,7 @@ function App() {
                       }`}
                       onClick={(e) => { e.stopPropagation(); handleTogglePokerPublic(); }}
                     >
-                      {pokerPublic ? 'Desativar acesso publico' : 'Liberar para todos'}
+                      {pokerPublic ? 'Disable public access' : 'Open to all'}
                     </button>
                   </div>
                 )}
